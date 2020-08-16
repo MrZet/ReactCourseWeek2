@@ -1,9 +1,80 @@
 <html>
     <head>
-        <title>Test page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>React course - week 2</title>
+        <style>
+            .App {
+                font-family: sans-serif;
+            }
+            .TimeboxEditor {
+                text-align: right;
+                border: 1px solid gray;
+                border-radius: 5px;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            input {
+                min-width: 20px;
+                margin-left: 20px;
+                font: size 16px;
+            }
+            button {
+                font-size:16px;
+                margin-left: 10px;
+            }
+            .Timebox {
+                border: 1px solid gray;
+                border-radius: 5px;
+                padding: 20px;
+                text-align: center;
+            }
+            .Clock {
+                color: orangered;
+            }
+            .ProgressBar {
+                border: 1px solid orangered;
+                border-radius: 5px;
+                height: 25px;  
+                margin-bottom: 20px;  
+                padding: 5px;
+            }
+            .ProgressBar >.ActualProgress {
+                height: 100%;
+                background-color: white;
+                float: left; 
+            }
+            .ProgressBar >.MaxProgress {
+                height: 100%;
+                background-color: orangered;
+            }
+            .inactive {
+                filter: blur(2px) grayscale(1)
+            }          
+        </style>
     </head>
     <body>
-        <h1>Test h1</h1>
-        <h2>Test h2</h2>
+        <h1>React course - week 2</h1>
+        <hr>
+        <div class="App">
+            <div class="TimeboxEditor inactive">
+                <label>What are you doing?<input type="text" value="Learning shortcuts" disabled></label><br>
+                <label>How many minutes?<input type="number" value ="25" disabled></label><br>
+                <button disabled>Begin</button>
+            </div>
+            <div class="Timebox">
+                <h1>Learning shortcuts</h1>
+                <h2 class="Clock">Left 14:29</h2>
+            </div>       
+            <div class="ProgressBar">
+                <div style="width:20%" class="ActualProgress"></div>
+                <div class="MaxProgress"></div>
+            </div>     
+            <button disabled>Start</button>
+            <button>Stop</button>
+            <button>Pause</button>
+            Number of pauses: 2
+        </div>
     </body>
 </html>
