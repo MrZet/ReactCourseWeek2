@@ -46,11 +46,10 @@
             .ProgressBar >.ActualProgress {
                 height: 100%;
                 background-color: white;
-                float: left; 
             }
             .ProgressBar >.MaxProgress {
                 height: 100%;
-                background-color: orangered;
+                background-color:orangered;
             }
             .inactive {
                 filter: blur(2px) grayscale(1)
@@ -70,10 +69,6 @@
                 <h1>Learning shortcuts</h1>
                 <div id="root"></div>
             </div>       
-            <div class="ProgressBar">
-                <div style="width:20%" class="ActualProgress"></div>
-                <div class="MaxProgress"></div>
-            </div>     
             <button disabled>Start</button>
             <button>Stop</button>
             <button>Pause</button>
@@ -112,10 +107,31 @@
             return (<h2 className = "Clock">Left {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
         };
 
-        const rootElement = document.getElementById("root");
-        const h2Element = <Clock hours={12} minutes={-1} seconds={29} miliseconds={10000}/>;
-        ReactDOM.render(h2Element,rootElement);
+        function ProgressBar({percent=22, trackRemaining = false})
+        {
+            const progressBarWidth = { width:`${percent}%`};
+            var progressBarFloat;
+            if(trackRemaining)
+            {
+                progressBarFloat = { float: "left" }; 
+            } 
+            else
+            {
+                progressBarFloat = { float: "right" }; 
+            }
 
+            return (
+            <div className="ProgressBar">
+                <div style={{...progressBarWidth,...progressBarFloat}} className="ActualProgress"></div>
+                <div className="MaxProgress"></div>
+            </div> )
+        }
+
+        ReactDOM.render(
+            <div>
+                <Clock hours={1} minutes={-1} seconds={29} miliseconds={10000}/>
+                <ProgressBar trackRemaining={true}/>
+            </div>,document.getElementById("root"));        
         </script>
     </body>
 </html>
