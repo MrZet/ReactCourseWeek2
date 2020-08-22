@@ -4,77 +4,82 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>React course - week 2</title>
+        <link rel="stylesheet" href="style.css">
         <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-        <style>
-            .App {
-                font-family: sans-serif;
-            }
-            .TimeboxEditor {
-                text-align: right;
-                border: 1px solid gray;
-                border-radius: 5px;
-                padding: 20px;
-                margin-bottom: 20px;
-            }
-            input {
-                min-width: 20px;
-                margin-left: 20px;
-                font: size 16px;
-            }
-            button {
-                font-size:16px;
-                margin-left: 10px;
-            }
-            .Timebox {
-                border: 1px solid gray;
-                border-radius: 5px;
-                padding: 20px;
-                text-align: center;
-            }
-            .Clock {
-                color: orangered;
-            }
-            .ProgressBar {
-                border: 1px solid orangered;
-                border-radius: 5px;
-                height: 25px;  
-                margin-bottom: 20px;  
-                padding: 5px;
-            }
-            .ProgressBar >.ActualProgress {
-                height: 100%;
-                background-color: white;
-            }
-            .ProgressBar >.MaxProgress {
-                height: 100%;
-                background-color:orangered;
-            }
-            .inactive {
-                filter: blur(2px) grayscale(1)
-            }          
-        </style>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>        
     </head>
     <body>
         <h1>React course - week 2</h1>
         <hr>
-        <div class="App">
-            <div class="TimeboxEditor inactive">
-                <label>What are you doing?<input type="text" value="Learning shortcuts" disabled></label><br>
-                <label>How many minutes?<input type="number" value ="25" disabled></label><br>
+        <div id="root"></div>
+    </body>
+    <script type="text/babel">
+        function TimeBoxEditor()
+        {
+            return (
+            <div className="TimeboxEditor inactive">
+                <label>What are you doing?<input type="text" value="Learning shortcuts" disabled/></label><br/>
+                <label>How many minutes?<input type="number" value ="25" disabled/></label><br/>
                 <button disabled>Begin</button>
-            </div>
-            <div class="Timebox">
-                <h1>Learning shortcuts</h1>
-                <div id="root"></div>
-            </div>       
-            <button disabled>Start</button>
-            <button>Stop</button>
-            <button>Pause</button>
-            Number of pauses: 2
-        </div>
-        <script type="text/babel">
+            </div>)
+        }
+
+        function Clock({hours=0, minutes=0, seconds=0, miliseconds=0})
+        {
+            hours = formatDate(hours,23);
+            minutes = formatDate(minutes,59);
+            seconds = formatDate(seconds,59);
+            miliseconds = formatDate(miliseconds,999,3);
+
+            return (<h2 className = "Clock">Left {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
+        };
+
+        function ProgressBar({percent=33, trackRemaining = false})
+        {
+            // const progressBarWidth = { width:`${percent}%`}; <-- template string (the same effect as below)
+            const progressBarWidth = { width:percent+"%"};
+            var progressBarFloat;
+            if(trackRemaining)
+            {
+                progressBarFloat = { float: "left" }; 
+            } 
+            else
+            {
+                progressBarFloat = { float: "right" }; 
+            }
+
+            return (
+            <div className="ProgressBar">
+                <div style={{...progressBarWidth,...progressBarFloat}} className="ActualProgress"></div>
+                <div className="MaxProgress"></div>
+            </div> )
+        }
+
+        function TimeBox()
+        {
+            return (
+                <div className="Timebox">
+                    <h1>Learning shortcuts</h1>
+                    <Clock hours={1} minutes={-1} seconds={29} miliseconds={10000}/>
+                    <ProgressBar trackRemaining={true}/>
+                    <br/> 
+                    <button disabled>Start</button>
+                    <button>Stop</button>
+                    <button>Pause</button>
+                    Number of pauses: 2
+                </div>    
+            )
+        }
+
+        function App()
+        { 
+            return(
+            <div className="App">
+                <TimeBoxEditor/>
+                <TimeBox/>  
+            </div>)
+        }       
 
         const addLeadingZeroes = (number, places = 2) => number.toString().padStart(places,'0');
         
@@ -97,41 +102,8 @@
             return datePart;
         }
 
-        function Clock({hours=0, minutes=0, seconds=0, miliseconds=0})
-        {
-            hours = formatDate(hours,23);
-            minutes = formatDate(minutes,59);
-            seconds = formatDate(seconds,59);
-            miliseconds = formatDate(miliseconds,999,3);
+        ReactDOM.render(<App/>,document.getElementById("root"));    
 
-            return (<h2 className = "Clock">Left {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
-        };
+    </script>
 
-        function ProgressBar({percent=22, trackRemaining = false})
-        {
-            const progressBarWidth = { width:`${percent}%`};
-            var progressBarFloat;
-            if(trackRemaining)
-            {
-                progressBarFloat = { float: "left" }; 
-            } 
-            else
-            {
-                progressBarFloat = { float: "right" }; 
-            }
-
-            return (
-            <div className="ProgressBar">
-                <div style={{...progressBarWidth,...progressBarFloat}} className="ActualProgress"></div>
-                <div className="MaxProgress"></div>
-            </div> )
-        }
-
-        ReactDOM.render(
-            <div>
-                <Clock hours={1} minutes={-1} seconds={29} miliseconds={10000}/>
-                <ProgressBar trackRemaining={true}/>
-            </div>,document.getElementById("root"));        
-        </script>
-    </body>
 </html>
