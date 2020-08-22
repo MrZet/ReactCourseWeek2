@@ -56,20 +56,31 @@
             </div> )
         }
 
-        function TimeBox()
+        class TimeBox extends React.Component
         {
-            return (
-                <div className="Timebox">
-                    <h1>Learning shortcuts</h1>
-                    <Clock hours={1} minutes={-1} seconds={29} miliseconds={10000}/>
-                    <ProgressBar trackRemaining={true}/>
-                    <br/> 
-                    <button disabled>Start</button>
-                    <button>Stop</button>
-                    <button>Pause</button>
-                    Number of pauses: 2
-                </div>    
-            )
+            constructor (props){
+                super(props);
+                this.state = {
+                    isRunning:true,
+                    isPaused:false,
+                    pausesCount:0
+                }
+            }
+            render() {
+                const {isRunning, isPaused, pausesCount} = this.state;
+                return (
+                    <div className="Timebox">
+                        <h1>Learning shortcuts</h1>
+                        <Clock hours={1} minutes={-1} seconds={29} miliseconds={10000}/>
+                        <ProgressBar trackRemaining={true}/>
+                        <br/> 
+                        <button disabled = {isRunning}>Start</button>
+                        <button disabled = {!isRunning}>Stop</button>
+                        <button disabled = {!isRunning}>{isPaused?"Resume":"Pause"}</button>
+                        Number of pauses: {pausesCount}
+                    </div>
+                )                 
+            }
         }
 
         function App()
