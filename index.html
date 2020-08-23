@@ -58,12 +58,13 @@
 
         class TimeBox extends React.Component
         {
-            constructor (props){
+            constructor (props){    
                 super(props);
                 this.state = {
                     isRunning:false,
                     isPaused:false,
-                    pausesCount:0
+                    pausesCount:0,
+                    elapsedTimeInSeconds:0
                 }
 
                 this.handleStart = this.handleStart.bind(this);
@@ -71,24 +72,43 @@
                 this.togglePause = this.togglePause.bind(this);
             }
 
-            handleStart(){
+            startTimer()
+            {
+                this.intervalId = window.setInterval(
+                    () => {
+                        this.setState((prevState) => ({elapsedTimeInSeconds:prevState.elapsedTimeInSeconds + 0.1}))
+                    }
+                    ,100
+                )
+            }
+
+            stopTimer()
+            {
+                window.clearInterval(this.intervalId);
+            }
+
+            handleStart(event){
                 this.setState({
                     isRunning:true,
-                })
+                }); 
+                this.startTimer();          
             }
             
             handleStop(){
                 this.setState({
                     isRunning:false,
                     isPaused:false,
-                    pausesCount:0
-                })
+                    pausesCount:0,
+                    elapsedTimeInSeconds:0
+                });
+                this.stopTimer()
             }
 
             togglePause(){
                 this.setState(
                     function(prevState){
                         const isPausedNow = prevState.isPaused;
+                        isPausedNow == true ? this.startTimer() : this.stopTimer();
                         return {
                             isPaused : !prevState.isPaused,
                             pausesCount : !isPausedNow ? prevState.pausesCount + 1 : prevState.pausesCount
@@ -98,12 +118,17 @@
             }
 
             render() {
-                const {isRunning, isPaused, pausesCount} = this.state;
+                const {isRunning, isPaused, pausesCount, elapsedTimeInSeconds} = this.state;
+                const totalTimeInSeconds = 25;
+                const timeLeftInSeconds = totalTimeInSeconds - elapsedTimeInSeconds;
+                const minutesPartOfElapsedTime = Math.floor(timeLeftInSeconds / 60);
+                const secondsPartOfElapsedTime = Math.floor(timeLeftInSeconds % 60);
+                const progressInPercent = (elapsedTimeInSeconds/totalTimeInSeconds)*100;
                 return (
                     <div className="Timebox">
                         <h1>Learning shortcuts</h1>
-                        <Clock hours={1} minutes={-1} seconds={29} miliseconds={10000} className={isPaused ? "inactive" : ""}/>
-                        <ProgressBar trackRemaining={true} className={isPaused ? "inactive" : ""}/>
+                        <Clock hours={0} minutes={minutesPartOfElapsedTime} seconds={secondsPartOfElapsedTime} miliseconds={0} className={isPaused ? "inactive" : ""}/>
+                        <ProgressBar percent={progressInPercent} trackRemaining={true} className={isPaused ? "inactive" : ""}/>
                         <br/> 
                         <button onClick={this.handleStart} disabled = {isRunning}>Start</button>
                         <button onClick={this.handleStop} disabled = {!isRunning}>Stop</button>
