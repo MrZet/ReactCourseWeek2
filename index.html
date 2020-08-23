@@ -37,22 +37,12 @@
 
         function ProgressBar({percent=33, trackRemaining = false, className=""})
         {
-            // const progressBarWidth = { width:`${percent}%`}; <-- template string (the same effect as below)
-            const progressBarWidth = { width:percent+"%"};
-            var progressBarFloat;
-            if(trackRemaining)
-            {
-                progressBarFloat = { float: "left" }; 
-            } 
-            else
-            {
-                progressBarFloat = { float: "right" }; 
-            }
+            const progressBarWidth = trackRemaining == true ? { width:(100 - percent)+"%"} : { width:percent+"%"};
+            const progressBarFloat = trackRemaining == true ? { float: "right" } :  { float: "left" };
 
             return (
             <div className={"ProgressBar"+" "+className}>
                 <div style={{...progressBarWidth,...progressBarFloat}} className="ActualProgress"></div>
-                <div className="MaxProgress"></div>
             </div> )
         }
 

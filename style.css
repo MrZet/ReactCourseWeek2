@@ -36,11 +36,7 @@
             }
             .ProgressBar >.ActualProgress {
                 height: 100%;
-                background-color: white;
-            }
-            .ProgressBar >.MaxProgress {
-                height: 100%;
-                background-color:orangered;
+                background-color: orangered;
             }
             .inactive {
                 filter: blur(2px) grayscale(1)
