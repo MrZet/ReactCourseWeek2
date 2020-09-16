@@ -15,14 +15,37 @@
         <div id="root"></div>
     </body>
     <script type="text/babel">
-        function TimeBoxEditor()
+        class TimeBoxEditor extends React.Component
         {
-            return (
-            <div className="TimeboxEditor inactive">
-                <label>What are you doing?<input type="text" value="Learning shortcuts" disabled/></label><br/>
-                <label>How many minutes?<input type="number" value ="25" disabled/></label><br/>
-                <button disabled>Begin</button>
-            </div>)
+            state = {
+                title:"Learning shortcuts",
+                totalTimeInMinutes:25
+            }
+
+            handleTitleChange = (event) =>
+            {
+                this.setState({title:event.target.value})
+            }
+
+            handleMinutesChange = (event) =>
+            {
+                this.setState({totalTimeInMinutes:event.target.value})
+            }
+            render() {
+
+                return (
+                    <div className="TimeboxEditor">
+                        <label>What are you doing?
+                            <input type="text" value={this.state.title} onChange={this.handleTitleChange}/>
+                        </label><br/>
+                        <label>How many minutes?
+                            <input type="number" value ={this.state.totalTimeInMinutes} onChange={this.handleMinutesChange}/>
+                        </label><br/>
+                        <button>Begin</button>
+                    </div>
+                    )
+                
+            }
         }
 
         function Clock({hours=0, minutes=0, seconds=0, miliseconds=0, className=""})
