@@ -24,12 +24,14 @@
 
             handleTitleChange = (event) =>
             {
-                this.setState({title:event.target.value})
+                this.setState({title:event.target.value});
+                this.props.onTitleChange(event);
             }
 
             handleMinutesChange = (event) =>
             {
-                this.setState({totalTimeInMinutes:event.target.value})
+                this.setState({totalTimeInMinutes:event.target.value});
+                this.props.onTotalTimeInMinutesChange(event);
             }
             render() {
 
@@ -132,14 +134,15 @@
 
             render() {
                 const {isRunning, isPaused, pausesCount, elapsedTimeInSeconds} = this.state;
-                const totalTimeInSeconds = 25;
+                const {title, totalTimeInMinutes} = this.props;
+                const totalTimeInSeconds = totalTimeInMinutes * 60;
                 const timeLeftInSeconds = totalTimeInSeconds - elapsedTimeInSeconds;
                 const minutesPartOfElapsedTime = Math.floor(timeLeftInSeconds / 60);
                 const secondsPartOfElapsedTime = Math.floor(timeLeftInSeconds % 60);
                 const progressInPercent = (elapsedTimeInSeconds/totalTimeInSeconds)*100;
                 return (
                     <div className="Timebox">
-                        <h1>Learning shortcuts</h1>
+                        <h1>{title}</h1>
                         <Clock hours={0} minutes={minutesPartOfElapsedTime} seconds={secondsPartOfElapsedTime} miliseconds={0} className={isPaused ? "inactive" : ""}/>
                         <ProgressBar percent={progressInPercent} trackRemaining={true} className={isPaused ? "inactive" : ""}/>
                         <br/> 
@@ -152,12 +155,39 @@
             }
         }
 
+        class EditableTimebox extends React.Component {
+            state = {
+                title: "Uczę się gry na gitarze",
+                totalTimeInMinutes: 27
+            }
+
+            handleTitleChange = (event) => {
+                this.setState({title:event.target.value})
+            }
+
+            handleTotalTimeInMinutesChange = (event) => {
+                this.setState({totalTimeInMinutes:event.target.value})
+            }
+
+            render() {
+                const {title, totalTimeInMinutes} = this.state;
+                return (
+                    <>
+                        <TimeBoxEditor 
+                            onTitleChange = {this.handleTitleChange} 
+                            onTotalTimeInMinutesChange = {this.handleTotalTimeInMinutesChange}/>
+                        <TimeBox title = {title} totalTimeInMinutes = {totalTimeInMinutes}/>  
+                    </>
+                )
+            }
+        }
+        
+
         function App()
         { 
             return(
             <div className="App">
-                <TimeBoxEditor/>
-                <TimeBox/>  
+                <EditableTimebox/>
             </div>)
         }       
 
