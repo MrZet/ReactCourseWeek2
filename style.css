@@ -1,7 +1,13 @@
             .App {
                 font-family: sans-serif;
             }
-            .TimeBoxEditor {
+            .Timebox {
+                border: 1px solid gray;
+                border-radius: 5px;
+                padding: 5px;
+                margin-bottom: 10px;
+            }
+            .TimeboxEditor, .TimeboxCreator {
                 text-align: right;
                 border: 1px solid gray;
                 border-radius: 5px;
@@ -18,7 +24,7 @@
                 margin-left: 10px;
                 margin-right: 5px;
             }
-            .TimeBox {
+            .CurrentTimebox {
                 border: 1px solid gray;
                 border-radius: 5px;
                 padding: 20px;
