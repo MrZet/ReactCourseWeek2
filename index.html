@@ -7,7 +7,8 @@
         <link rel="stylesheet" href="style.css">
         <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>        
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.min.js" integrity="sha512-rV0Q1QWodkoLjts/qP2XHtjvUPTmN46k4eH0lzOR3mDui8a0YnL/uqydipXA9mQ2wG6J4imL0BO6/26rcFho7Q==" crossorigin="anonymous"></script>
     </head>
     <body>
         <h1>React course - week 2</h1>
@@ -57,9 +58,9 @@
         {
             state = {
                 timeboxes:[
-                    {title: "Mycie zębów", totalTimeInMinutes: "2"},
-                    {title: "Czytanie książki", totalTimeInMinutes: "30"},
-                    {title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8"}
+                    {id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2"},
+                    {id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30"},
+                    {id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8"}
                 ]
             }         
 
@@ -72,7 +73,7 @@
 
             handleCreate = () =>
             {
-                this.addTimebox({title : "New timebox", totalTimeInMinutes : 6})
+                this.addTimebox({ id : uuid.v4(), title : "New timebox", totalTimeInMinutes : 6})
             }
 
             handleEdit = (indexToUpdate, editedTimebox) =>
@@ -99,7 +100,7 @@
                         <TimeboxCreator onCreate = {this.handleCreate}/>
                         {this.state.timeboxes.map((timebox, index) => (
                             <Timebox 
-                                key={index} 
+                                key={timebox.id} 
                                 title = {timebox.title} 
                                 totalTimeInMinutes={timebox.totalTimeInMinutes}
                                 onDelete = {() => this.handleDelete(index)}
@@ -117,6 +118,7 @@
                     <h3>{title} - {totalTimeInMinutes}</h3>
                     <button onClick = {onDelete}>Delete</button>
                     <button onClick = {onEdit}>Edit</button>
+                    <input/>
                 </div>
             )
         }
