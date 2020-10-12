@@ -56,7 +56,7 @@
 
             handleSubmit = (event) =>{
                 event.preventDefault();
-                this.props.onCreate({id: uuid.v4(), title:this.state.title, totalTimeInMinutes:4});
+                this.props.onCreate({id: uuid.v4(), title:this.state.title, totalTimeInMinutes:this.state.totalTimeInMinutes});
                 this.setState({title:"", totalTimeInMinutes:""})
             }
             render(){
@@ -88,9 +88,9 @@
         {
             state = {
                 timeboxes:[
-                    {id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2"},
-                    {id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30"},
-                    {id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8"}
+                    {id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2", areEditControlsVisible: false, editInput:""},
+                    {id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30", areEditControlsVisible: false, editInput:""},
+                    {id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput:""}
                 ]
             }         
 
@@ -106,11 +106,11 @@
                 this.addTimebox(createdTimebox)
             }
 
-            handleEdit = (indexToUpdate, editedTimebox) =>
+            handleEdit = (indexToEdit) =>
             {
                 this.setState(prevState=>{
                     const timeboxes = prevState.timeboxes.map((timebox,index)=>
-                        index === indexToUpdate ? editedTimebox : timebox
+                        ({...timebox, areEditControlsVisible: (index === indexToEdit ? true : false)})
                     )
                     return {timeboxes};
                 })
@@ -120,6 +120,28 @@
             {
                 this.setState(prevState=>{
                     const timeboxes = prevState.timeboxes.filter((timebox,index) => index !== indexToDelete);
+                    return {timeboxes};
+                })
+            }
+
+            handleEditChange = (event, indexToEdit) => {
+                this.setState(prevState=>{
+                    const timeboxes = prevState.timeboxes.map((timebox,index)=>
+                        ({...timebox, editInput: (index === indexToEdit ? event.target.value : "")})
+                    )
+                    return {timeboxes};
+                })
+            }
+
+            handleConfirm = (indexToConfirm) =>
+            {
+                this.setState(prevState=>{
+                    const timeboxes = prevState.timeboxes.map((timebox,index)=>
+                        ({...timebox,
+                            title: (index === indexToConfirm ? timebox.editInput : timebox.title),
+                            areEditControlsVisible: false,
+                            })
+                    )
                     return {timeboxes};
                 })
             }
@@ -134,8 +156,10 @@
                                 title = {timebox.title} 
                                 totalTimeInMinutes={timebox.totalTimeInMinutes}
                                 onDelete = {() => this.handleDelete(index)}
-                                onEdit = {() => this.handleEdit(index, {...timebox, title: "New Title"})}
-                                
+                                onEdit = {() => this.handleEdit(index)}
+                                areEditControlsVisible = {timebox.areEditControlsVisible}
+                                handleEditChange = {() => this.handleEditChange(event,index)}
+                                onConfirm = {() => this.handleConfirm(index)}
                             />
                         ))}
                     </>
@@ -143,13 +167,14 @@
             }
         }
 
-        function Timebox ({title, totalTimeInMinutes, onDelete, onEdit}){
+        function Timebox ({title, totalTimeInMinutes, onDelete, onEdit, areEditControlsVisible, handleEditChange, onConfirm}){
             return (
                 <div className="Timebox">
                     <h3>{title} - {totalTimeInMinutes}</h3>
                     <button onClick = {onDelete}>Delete</button>
                     <button onClick = {onEdit}>Edit</button>
-                    <input visible/>
+                    {areEditControlsVisible?<input onChange = {handleEditChange}/>:""}
+                    {areEditControlsVisible?<button onClick = {onConfirm}>Confirm</button>:""}
                 </div>
             )
         }
