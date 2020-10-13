@@ -14,6 +14,23 @@
                 padding: 20px;
                 margin-bottom: 20px;
             }
+
+            .TimeboxCreator {
+                background-color: aqua;
+            }
+
+            .TimeboxEditor {
+                background-color: aquamarine;
+            }
+
+            .Timebox {
+                background-color: #ffaaaa;
+            }
+
+            .CurrentTimebox {
+                background-color: #ffffaa;
+            }
+
             input {
                 min-width: 20px;
                 margin-left: 20px;
