@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import uuid from 'uuid'
+import './styles/main.css'
 
 function TimeboxEditor (props)
         {
