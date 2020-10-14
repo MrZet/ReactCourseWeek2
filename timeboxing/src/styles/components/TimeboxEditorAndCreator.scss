@@ -1,0 +1,15 @@
+.TimeboxEditor, .TimeboxCreator {
+    text-align: right;
+    border: $default-border;
+    border-radius: $border-radius;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.TimeboxCreator {
+    background-color:lighten(aqua,40);
+}
+
+.TimeboxEditor {
+    background-color:darken(aquamarine, 50);
+}
