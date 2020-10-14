@@ -173,16 +173,16 @@ function TimeboxEditor (props)
             seconds = formatDate(seconds,59);
             miliseconds = formatDate(miliseconds,999,3);
 
-            return (<h2 className = {"Clock"+" "+className}>Left {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
+            return (<h2 className = {"Clock "+className}>Left {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
         };
 
         function ProgressBar({percent=33, trackRemaining = false, className=""})
         {
-            const progressBarWidth = trackRemaining == true ? { width:(100 - percent)+"%"} : { width:percent+"%"};
-            const progressBarFloat = trackRemaining == true ? { float: "right" } :  { float: "left" };
+            const progressBarWidth = trackRemaining === true ? { width:(100 - percent)+"%"} : { width:percent+"%"};
+            const progressBarFloat = trackRemaining === true ? { float: "right" } :  { float: "left" };
 
             return (
-            <div className={"ProgressBar"+" "+className}>
+            <div className={"ProgressBar "+className}>
                 <div style={{...progressBarWidth,...progressBarFloat}} className="ActualProgress"></div>
             </div> )
         }
@@ -239,7 +239,7 @@ function TimeboxEditor (props)
                 this.setState(
                     function(prevState){
                         const isPausedNow = prevState.isPaused;
-                        isPausedNow == true ? this.startTimer() : this.stopTimer();
+                        isPausedNow === true ? this.startTimer() : this.stopTimer();
                         return {
                             isPaused : !prevState.isPaused,
                             pausesCount : !isPausedNow ? prevState.pausesCount + 1 : prevState.pausesCount
