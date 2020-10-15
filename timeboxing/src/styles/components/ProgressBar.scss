@@ -1,12 +1,25 @@
-.ProgressBar {
-    border: 1px solid orangered;
+.progress {
+    border: 1px solid black;
     border-radius: $border-radius;
     height: 25px;  
     margin-bottom: 20px;  
     padding: 5px;
 
-    >.ActualProgress {
+    &--big {
+        height: 50px;
+    }
+    
+    &--color-orangered{
+        border-color:orangered;
+    }
+    
+    &__bar {
         height: 100%;
+        background-color: black;
+    }
+    
+    &--color-orangered .progress__bar{
         background-color: orangered;
     }
 }
+

@@ -6,8 +6,8 @@ function ProgressBar({percent=33, trackRemaining = false, className=""})
     const progressBarFloat = trackRemaining === true ? { float: "right" } :  { float: "left" };
 
     return (
-    <div className={"ProgressBar "+className}>
-        <div style={{...progressBarWidth,...progressBarFloat}} className="ActualProgress"></div>
+    <div className={"progress progress--big progress--color-orangered" + className}>
+        <div className="progress__bar" style={{...progressBarWidth,...progressBarFloat}}></div>
     </div> )
 }
 
