@@ -21,14 +21,14 @@ function formatDate(datePart, maxValue, places)
     return datePart;
 }
 
-function Clock({hours=0, minutes=0, seconds=0, miliseconds=0, className=""})
+function Clock({hours=0, minutes=0, seconds=0, miliseconds=0, className="", children})
 {
     hours = formatDate(hours,23);
     minutes = formatDate(minutes,59);
     seconds = formatDate(seconds,59);
     miliseconds = formatDate(miliseconds,999,3);
 
-    return (<h2 className = {"Clock "+className}>Left {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
+    return (<h2 className = {"Clock "+className}>{children} {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
 };
 
 export default Clock;

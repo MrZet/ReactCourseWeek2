@@ -82,10 +82,10 @@ class CurrentTimebox extends React.Component
         return (
             <div className={`CurrentTimebox ${isEditible?"inactive":""}`}>
                 <h1>{title}</h1>
-                <Clock hours={0} minutes={minutesPartOfElapsedTime} seconds={secondsPartOfElapsedTime} miliseconds={0} className={isPaused ? "inactive" : ""}/>
+                <Clock hours={0} minutes={minutesPartOfElapsedTime} seconds={secondsPartOfElapsedTime} miliseconds={0} className={isPaused ? "inactive" : ""}>Left</Clock>
                 <ProgressBar percent={progressInPercent} trackRemaining={true} className={isPaused ? "inactive" : ""} big color = "orangered"/>
                 <br/> 
-                <button onClick={onEdit} disabled = {isEditible}>Edytuj</button>
+                <button onClick={onEdit} disabled = {isEditible}>Edit</button>
                 <button onClick={this.handleStart} disabled = {isRunning}>Start</button>
                 <button onClick={this.handleStop} disabled = {!isRunning}>Stop</button>
                 <button onClick={this.togglePause} disabled = {!isRunning}>{isPaused?"Resume":"Pause"}</button>
