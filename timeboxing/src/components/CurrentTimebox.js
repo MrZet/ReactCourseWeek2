@@ -18,6 +18,11 @@ class CurrentTimebox extends React.Component
         this.togglePause = this.togglePause.bind(this);
     }
 
+    componentWillUnmount(){
+        console.log("CurrentTimebox it's about to unload.");
+        this.stopTimer();
+    }
+
     startTimer()
     {
         this.intervalId = window.setInterval(
@@ -34,6 +39,8 @@ class CurrentTimebox extends React.Component
     }
 
     handleStart(event){
+        console.log("Timer started.");
+        console.log(event);
         this.setState({
             isRunning:true,
         }); 
@@ -41,6 +48,7 @@ class CurrentTimebox extends React.Component
     }
     
     handleStop(){
+        console.log("Timer stopped.");
         this.setState({
             isRunning:false,
             isPaused:false,
