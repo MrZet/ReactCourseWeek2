@@ -6,11 +6,13 @@ import RealTimeClock from './RealTimeClock';
 function App()
 { 
     return(
-    <div className="App">
-        <RealTimeClock/>
-        <TimeboxList/>
-        <EditableTimebox/>
-    </div>)
+        <React.StrictMode>
+            <div className="App">
+                <RealTimeClock/>
+                <TimeboxList/>
+                <EditableTimebox/>
+            </div>
+        </React.StrictMode>)
 } 
 
 export default App;
