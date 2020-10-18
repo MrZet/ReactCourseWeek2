@@ -44,8 +44,8 @@ Clock.propTypes = {
     hours:PropTypes.number.isRequired, 
     minutes:PropTypes.number.isRequired, 
     seconds:PropTypes.number.isRequired, 
-    miliseconds:PropTypes.number.isRequired, 
-    className:PropTypes.string.isRequired
+    miliseconds:PropTypes.number, 
+    className:PropTypes.string
 }
 
 export default Clock;
