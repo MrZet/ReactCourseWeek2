@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const addLeadingZeroes = (number, places = 2) => number.toString().padStart(places,'0');
         
@@ -21,7 +22,7 @@ function formatDate(datePart, maxValue, places)
     return datePart;
 }
 
-function Clock({hours=0, minutes=0, seconds=0, miliseconds=0, className="", children})
+function Clock({hours, minutes, seconds, miliseconds, className, children})
 {
     hours = formatDate(hours,23);
     minutes = formatDate(minutes,59);
@@ -30,5 +31,21 @@ function Clock({hours=0, minutes=0, seconds=0, miliseconds=0, className="", chil
 
     return (<h2 className = {"Clock "+className}>{children} {hours}:{minutes}:{seconds}:{miliseconds}</h2>);
 };
+
+Clock.defaultProps = {
+    hours:0, 
+    minutes:0, 
+    seconds:0, 
+    miliseconds:0, 
+    className:"" 
+}
+
+Clock.propTypes = {
+    hours:PropTypes.number.isRequired, 
+    minutes:PropTypes.number.isRequired, 
+    seconds:PropTypes.number.isRequired, 
+    miliseconds:PropTypes.number.isRequired, 
+    className:PropTypes.string.isRequired
+}
 
 export default Clock;

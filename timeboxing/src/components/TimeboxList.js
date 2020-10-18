@@ -2,7 +2,7 @@ import React from 'react'
 import uuid from 'uuid'
 import TimeboxCreator from './TimeboxCreator'
 import Timebox from './Timebox'
-import Error from './Error'
+import ErrorBoundary from './ErrorBoundary'
 
 class TimeboxList extends React.Component
 {
@@ -86,7 +86,7 @@ class TimeboxList extends React.Component
                 <TimeboxCreator onCreate = {this.handleCreate}/>
                 {   
                     this.state.timeboxes.map((timebox, index) => (
-                    <Error key={timebox.id} message = "Something gone bad :(">
+                    <ErrorBoundary key={timebox.id} message = "Something gone bad :(">
                         <Timebox                            
                             title = {timebox.title}
                             totalTimeInMinutes={timebox.totalTimeInMinutes}
@@ -98,7 +98,7 @@ class TimeboxList extends React.Component
                             onConfirm = {() => this.handleConfirm(index)}
                             hasError = {() => this.handleError(index)}
                         />
-                    </Error>
+                    </ErrorBoundary>
                 ))}
             </>
         )

@@ -2,18 +2,18 @@ import React from 'react'
 import TimeboxList from './TimeboxList';
 import EditableTimebox from './EditableTimebox';
 import RealTimeClock from './RealTimeClock';
-import Error from './Error';
+import ErrorBoundary from './ErrorBoundary';
 
 function App()
 { 
     return(
         <React.StrictMode>
             <div className="App">
-                <Error message="Error in App!">
+                <ErrorBoundary message="Error in App!">
                     <RealTimeClock/>
                     <TimeboxList/>
                     <EditableTimebox/>
-                </Error>
+                </ErrorBoundary>
             </div>
         </React.StrictMode>)
 } 
