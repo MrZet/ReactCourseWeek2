@@ -7,18 +7,26 @@ class TimeboxList extends React.Component
 {
     state = {
         timeboxes:[
-            {id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2", areEditControlsVisible: false, editInput:""},
-            {id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30", areEditControlsVisible: false, editInput:""},
-            {id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput:""}
-        ]
-    }         
+            {id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2", areEditControlsVisible: false, editInput:"", hasError: false},
+            {id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30", areEditControlsVisible: false, editInput:"", hasError: false},
+            {id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput:"", hasError: false}
+        ],
+        hasError:false
+    }
+    static getDerivedStateFromError(error){
+        return {hasError:true }
+    }
+
+    componentDidCatch(error,info){
+        console.log("There were an error: ", error, info);
+    }
 
     addTimebox = (timebox) => {
         this.setState(prevState=>{
             const timeboxes = [timebox,...prevState.timeboxes];
             return {timeboxes};
         })
-    }   
+    }
 
     handleCreate = (createdTimebox) =>
     {
@@ -65,21 +73,40 @@ class TimeboxList extends React.Component
         })
     }
 
+    handleError = (indexOfError) =>
+    {
+        this.setState(prevState=>{
+            const timeboxes = prevState.timeboxes.map((timebox,index)=>
+                ({...timebox,
+                    hasError: (index === indexOfError ? true : timebox.hasError)
+                    })
+            )
+            return {timeboxes};
+        })
+    }
+
+
     render(){
+        console.table(this.state.timeboxes);
         return (
             <>
                 <TimeboxCreator onCreate = {this.handleCreate}/>
-                {this.state.timeboxes.map((timebox, index) => (
-                    <Timebox 
-                        key={timebox.id} 
-                        title = {timebox.title} 
+                {   
+                    //uncomment if whole TimeboxList should show problem if there is a problem with one Timebox
+                    //this.state.hasError?"Something gone bad :(":
+                    this.state.timeboxes.map((timebox, index) => (
+                        timebox.hasError?"Something gone bad :(":
+                    <Timebox
+                        key={timebox.id}
+                        title = {timebox.title}
                         totalTimeInMinutes={timebox.totalTimeInMinutes}
                         onDelete = {() => this.handleDelete(index)}
                         onEdit = {() => this.handleEdit(index)}
                         areEditControlsVisible = {timebox.areEditControlsVisible}
                         //{document.getElementsByClassName("Timebox").addEventListener("")}
-                        //handleEditChange = {() => this.handleEditChange(event, index)}                                
+                        //handleEditChange = {() => this.handleEditChange(event, index)}
                         onConfirm = {() => this.handleConfirm(index)}
+                        hasError = {() => this.handleError(index)}
                     />
                 ))}
             </>
