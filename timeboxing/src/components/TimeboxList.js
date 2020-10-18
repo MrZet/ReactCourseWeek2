@@ -2,6 +2,7 @@ import React from 'react'
 import uuid from 'uuid'
 import TimeboxCreator from './TimeboxCreator'
 import Timebox from './Timebox'
+import Error from './Error'
 
 class TimeboxList extends React.Component
 {
@@ -12,13 +13,6 @@ class TimeboxList extends React.Component
             {id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput:"", hasError: false}
         ],
         hasError:false
-    }
-    static getDerivedStateFromError(error){
-        return {hasError:true }
-    }
-
-    componentDidCatch(error,info){
-        console.log("There were an error: ", error, info);
     }
 
     addTimebox = (timebox) => {
@@ -87,27 +81,24 @@ class TimeboxList extends React.Component
 
 
     render(){
-        console.table(this.state.timeboxes);
         return (
             <>
                 <TimeboxCreator onCreate = {this.handleCreate}/>
                 {   
-                    //uncomment if whole TimeboxList should show problem if there is a problem with one Timebox
-                    //this.state.hasError?"Something gone bad :(":
                     this.state.timeboxes.map((timebox, index) => (
-                        timebox.hasError?"Something gone bad :(":
-                    <Timebox
-                        key={timebox.id}
-                        title = {timebox.title}
-                        totalTimeInMinutes={timebox.totalTimeInMinutes}
-                        onDelete = {() => this.handleDelete(index)}
-                        onEdit = {() => this.handleEdit(index)}
-                        areEditControlsVisible = {timebox.areEditControlsVisible}
-                        //{document.getElementsByClassName("Timebox").addEventListener("")}
-                        //handleEditChange = {() => this.handleEditChange(event, index)}
-                        onConfirm = {() => this.handleConfirm(index)}
-                        hasError = {() => this.handleError(index)}
-                    />
+                    <Error key={timebox.id} message = "Something gone bad :(">
+                        <Timebox                            
+                            title = {timebox.title}
+                            totalTimeInMinutes={timebox.totalTimeInMinutes}
+                            onDelete = {() => this.handleDelete(index)}
+                            onEdit = {() => this.handleEdit(index)}
+                            areEditControlsVisible = {timebox.areEditControlsVisible}
+                            //{document.getElementsByClassName("Timebox").addEventListener("")}
+                            //handleEditChange = {() => this.handleEditChange(event, index)}
+                            onConfirm = {() => this.handleConfirm(index)}
+                            hasError = {() => this.handleError(index)}
+                        />
+                    </Error>
                 ))}
             </>
         )

@@ -5,7 +5,7 @@ function Timebox ({title, totalTimeInMinutes, onDelete, onEdit, areEditControlsV
         hasError();
         throw new Error("Total time in minutes should be greater than zero.")
     }
-    if(title == null || title == ""){
+    if(title == null || title === ""){
         throw new Error("Title cannot be empty.")
     }
 
