@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Clock/> When given time parts (REACT-TEST-RENDERER) render properly 1`] = `
+<h2
+  className="Clock "
+>
+   
+  12
+  :
+  13
+  :
+  00
+  :
+  000
+</h2>
+`;
