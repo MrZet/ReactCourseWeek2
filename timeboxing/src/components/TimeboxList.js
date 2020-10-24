@@ -4,15 +4,37 @@ import TimeboxCreator from './TimeboxCreator'
 import Timebox from './Timebox'
 import ErrorBoundary from './ErrorBoundary'
 
+function wait(ms = 1000){
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    })
+}
+
+
+async function getTimeboxesAsync() {
+    //throw new Error("Test Error");
+    await wait(3000);
+    return [
+            { id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2", areEditControlsVisible: false, editInput: "", hasError: false },
+            { id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30", areEditControlsVisible: false, editInput: "", hasError: false },
+            { id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput: "", hasError: false }
+        ]
+}
+
 class TimeboxList extends React.Component
 {
     state = {
-        timeboxes:[
-            {id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2", areEditControlsVisible: false, editInput:"", hasError: false},
-            {id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30", areEditControlsVisible: false, editInput:"", hasError: false},
-            {id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput:"", hasError: false}
-        ],
-        hasError:false
+        timeboxes:[],
+        hasError:false,
+        isLoading:true,
+        isError:false
+    }
+
+    componentDidMount(){
+        getTimeboxesAsync()
+            .then((resolve) => this.setState({timeboxes:resolve}))
+            .catch(() => this.setState({isError:true}))
+            .finally(() => this.setState({isLoading:false}));
     }
 
     addTimebox = (timebox) => {
@@ -79,11 +101,12 @@ class TimeboxList extends React.Component
         })
     }
 
-
     render(){
         return (
             <>
                 <TimeboxCreator onCreate = {this.handleCreate}/>
+                {this.state.isLoading? "Components are loading..." : null}
+                {this.state.isError? "Something gone bad :(" : null}
                 {   
                     this.state.timeboxes.map((timebox, index) => (
                     <ErrorBoundary key={timebox.id} message = "Something gone bad :(">
