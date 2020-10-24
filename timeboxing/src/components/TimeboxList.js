@@ -10,16 +10,27 @@ function wait(ms = 1000){
     })
 }
 
+const timeboxes = [
+    { id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2", areEditControlsVisible: false, editInput: "", hasError: false },
+    { id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30", areEditControlsVisible: false, editInput: "", hasError: false },
+    { id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput: "", hasError: false }
+]
 
-async function getTimeboxesAsync() {
-    //throw new Error("Test Error");
-    await wait(3000);
-    return [
-            { id: uuid.v4(), title: "Mycie zębów", totalTimeInMinutes: "2", areEditControlsVisible: false, editInput: "", hasError: false },
-            { id: uuid.v4(), title: "Czytanie książki", totalTimeInMinutes: "30", areEditControlsVisible: false, editInput: "", hasError: false },
-            { id: uuid.v4(), title: "Przygotowanie jajecznicy", totalTimeInMinutes: "8", areEditControlsVisible: false, editInput: "", hasError: false }
-        ]
+const TimeboxesAPI = {
+    getAllTimeboxes: async function () {
+        //throw new Error("Test Error");
+        await wait(3000);
+        return [...timeboxes]
+    },    
+    addTimebox:async function (timeboxToAdd) {
+        await wait(3000);
+        const addedTimebox = {...timeboxToAdd, id: uuid.v4()}
+        timeboxes.push(addedTimebox);
+        return addedTimebox;
+    }
 }
+
+
 
 class TimeboxList extends React.Component
 {
@@ -31,16 +42,19 @@ class TimeboxList extends React.Component
     }
 
     componentDidMount(){
-        getTimeboxesAsync()
+        TimeboxesAPI.getAllTimeboxes()
             .then((resolve) => this.setState({timeboxes:resolve}))
             .catch(() => this.setState({isError:true}))
             .finally(() => this.setState({isLoading:false}));
     }
 
     addTimebox = (timebox) => {
-        this.setState(prevState=>{
-            const timeboxes = [timebox,...prevState.timeboxes];
-            return {timeboxes};
+        TimeboxesAPI.addTimebox(timebox)
+            .then((addedTimebox)=>{
+                this.setState(prevState=>{
+                const timeboxes = [...prevState.timeboxes, addedTimebox];
+                return {timeboxes};
+            })
         })
     }
 
