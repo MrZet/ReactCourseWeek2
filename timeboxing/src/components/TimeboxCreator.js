@@ -1,5 +1,4 @@
 import React from 'react'
-import uuid from 'uuid'
 
 class TimeboxCreator extends React.Component 
 {
