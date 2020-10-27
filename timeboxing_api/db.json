@@ -1,4 +1,16 @@
 {
+  "users": [
+    {
+      "email": "asdf@hotmail.com",
+      "password": "$2a$10$FXi.dS6dnU/PhEUCJy4UP.RoWuYc9IqL5OwqABSZKDw.XnS5Zuxs2",
+      "id": 1
+    },
+    {
+      "email": "zxcv@hotmail.com",
+      "password": "$2a$10$S7PrL8EnR1JYoIZYT.ymAOpb3Hyt2WOMXf20jIuXZaD4vhNZt4Gsi",
+      "id": 2
+    }
+  ],
   "timeboxes": [
     {
       "id": 1,
