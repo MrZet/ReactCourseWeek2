@@ -4,23 +4,44 @@ import EditableTimebox from './EditableTimebox';
 import RealTimeClock from './RealTimeClock';
 import ErrorBoundary from './ErrorBoundary';
 import LoginForm from './LoginForm';
+import AuthenticationApi from '../api/FetchAuthenticationApi'
+import Jwt from 'jsonwebtoken'
 
 class App extends React.Component 
 { 
+    state = {
+        accessToken : null,
+        previousLoginAttemptFailed: false
+    }
+
     isUserLoggedIn() {
-        return false;
+        return !!this.state.accessToken;
     }
 
     getUserEmail(){
-        return "test@hotmail.com";
+        return Jwt.decode(this.state.accessToken).email;
+    }
+
+    handleLoggingAttempt = (credentials) => {
+        AuthenticationApi.login(credentials)
+        .then(({accessToken}) => {
+            this.setState({
+                accessToken,
+                previousLoginAttemptFailed : false
+            })
+        })
+        .catch((error) => {
+            this.setState({
+                previousLoginAttemptFailed : true
+            })
+        });
     }
 
     handleLogout = () => {
-        console.log("Log out clicked.")
-    }
-
-    handleLoggingAttempt = () => {
-        console.log("Logging attempt handler.")
+        this.setState({
+            accessToken : null,
+            previousLoginAttemptFailed : false
+        })
     }
 
     render(){
@@ -39,8 +60,8 @@ class App extends React.Component
                                 <EditableTimebox/>
                             </>
                             :<LoginForm 
-                                errorMessage = "Logging is not available."
-                                onLoggingAttempt = {this.handleLoggingAttempt}
+                                errorMessage = {this.state.previousLoginAttemptFailed ? "Logging is not available." : null}
+                                onLoginAttempt = {this.handleLoggingAttempt}
                             />
                         }                        
                     </ErrorBoundary>

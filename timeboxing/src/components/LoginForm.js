@@ -25,7 +25,10 @@ class LoginForm extends React.Component
             <form 
                 onSubmit={this.handleSubmit}
                 className="LoginForm">
-                <div className = "LoginForm__error-message">{this.props.errorMessage}</div>
+                {   this.props.errorMessage 
+                    ? <div className = "LoginForm__error-message">{this.props.errorMessage}</div>
+                    :null
+                    }
                 <label>Email: 
                     <input 
                         type="text"
