@@ -1,40 +1,26 @@
-const BASE_URL = "http://localhost:4000/timeboxes";
+import makeRequest from './MakeFetchRequest'
+
+const BASE_URL = "http://localhost:5000/timeboxes";
 
 const FetchTimeboxesAPI = {
-    getAllTimeboxes: async function () {
-        const response = await makeRequest(BASE_URL, "GET");
+    getAllTimeboxes: async function (accessToken) {
+        console.log({accessToken})
+        const response = await makeRequest(BASE_URL, "GET", null, accessToken);
         const timeboxes = await response.json();
         return timeboxes;
     },    
-    addTimebox:async function (timeboxToAdd) {
-        const response = await makeRequest(BASE_URL, "POST", timeboxToAdd);
+    addTimebox:async function (timeboxToAdd, accessToken) {
+        const response = await makeRequest(BASE_URL, "POST", timeboxToAdd, accessToken);
         const addedTimebox = await response.json()
         return addedTimebox;
     },
-    removeTimebox: async function (timeboxToRemove){
+    removeTimebox: async function (timeboxToRemove, accessToken){
         if(!timeboxToRemove.id)
         {
             throw new Error("Id of deleted timebox has not been given.")
         }
-        await makeRequest(`${BASE_URL}/${timeboxToRemove.id}`, "DELETE");
+        await makeRequest(`${BASE_URL}/${timeboxToRemove.id}`, "DELETE", null, accessToken);
     }
-}
-
-async function makeRequest(url, method, body){
-    const jsonBody = body ? JSON.stringify(body) : undefined;
-
-    const timebox = {
-        method,
-        headers: {
-            "Content-Type" : "application/json"
-        },
-        body: jsonBody
-    }
-    const response = await window.fetch(url, timebox);
-    if(!response.ok){
-        throw new Error(`Error during ${makeRequest.name} method execution.`)
-    }
-    return response;
 }
 
 export default FetchTimeboxesAPI

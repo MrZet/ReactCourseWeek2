@@ -26,6 +26,11 @@
       "id": 3,
       "title": "Przygotowanie jajecznicy",
       "totalTimeInMinutes": "8"
+    },
+    {
+      "title": "3",
+      "totalTimeInMinutes": "3",
+      "id": 4
     }
   ]
 }

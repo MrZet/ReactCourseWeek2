@@ -56,7 +56,7 @@ class App extends React.Component
                                     <a className="header__logout-link" onClick={this.handleLogout} href="">Sign out</a>
                                 </header>
                                 <RealTimeClock/>
-                                <TimeboxList/>
+                                <TimeboxList accessToken = {this.state.accessToken} />
                                 <EditableTimebox/>
                             </>
                             :<LoginForm 
