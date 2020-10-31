@@ -1,11 +1,8 @@
 import React from 'react';
-import TimeboxList from './TimeboxList';
-import EditableTimebox from './EditableTimebox';
-import RealTimeClock from './RealTimeClock';
 import ErrorBoundary from './ErrorBoundary';
 import LoginForm from './LoginForm';
 import AuthenticationApi from '../api/FetchAuthenticationApi';
-import Header from './Header';
+import AuthenticatedApp from './AuthenticatedApp';
 
 class App extends React.Component 
 { 
@@ -47,10 +44,7 @@ class App extends React.Component
                     <ErrorBoundary message="Error in App!">
                         { this.isUserLoggedIn() ? 
                             <>
-                                <Header accessToken = {this.state.accessToken} onLogout = {this.handleLogout}/>
-                                <RealTimeClock/>
-                                <TimeboxList accessToken = {this.state.accessToken} />
-                                <EditableTimebox/>
+                                <AuthenticatedApp accessToken = {this.state.accessToken} onLogout = {this.handleLogout}/>
                             </>
                             :<LoginForm 
                                 errorMessage = {this.state.previousLoginAttemptFailed ? "Logging is not available." : null}
