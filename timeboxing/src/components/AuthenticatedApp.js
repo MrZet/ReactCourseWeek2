@@ -4,12 +4,12 @@ import RealTimeClock from './RealTimeClock'
 import TimeboxList from './TimeboxList'
 import EditableTimebox from './EditableTimebox'
 
-function AuthenticatedApp({accessToken, onLogout}) {
+function AuthenticatedApp({onLogout}) {
     return (
         <>
-            <Header accessToken = {accessToken} onLogout = {onLogout}/>
+            <Header onLogout = {onLogout}/>
             <RealTimeClock/>
-            <TimeboxList accessToken = {accessToken} />
+            <TimeboxList/>
             <EditableTimebox/>
         </>
     );

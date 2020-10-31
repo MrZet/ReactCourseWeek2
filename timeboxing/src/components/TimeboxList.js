@@ -3,6 +3,7 @@ import TimeboxCreator from './TimeboxCreator'
 import Timebox from './Timebox'
 import ErrorBoundary from './ErrorBoundary'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
+import AuthenticationContext from '../contexts/AuthenticationContext'
 
 
 class TimeboxList extends React.Component
@@ -15,14 +16,14 @@ class TimeboxList extends React.Component
     }
 
     componentDidMount(){
-        TimeboxesAPI.getAllTimeboxes(this.props.accessToken)
+        TimeboxesAPI.getAllTimeboxes(this.context.accessToken)
             .then((resolve) => this.setState({timeboxes:resolve}))
             .catch(() => this.setState({isError:true}))
             .finally(() => this.setState({isLoading:false}));
     }
 
     addTimebox = (timebox) => {
-        TimeboxesAPI.addTimebox(timebox, this.props.accessToken)
+        TimeboxesAPI.addTimebox(timebox, this.context.accessToken)
             .then((addedTimebox)=>{
                 this.setState(prevState=>{
                 const timeboxes = [...prevState.timeboxes, addedTimebox];
@@ -33,7 +34,7 @@ class TimeboxList extends React.Component
 
     handleCreate = (createdTimebox) =>
     {
-        this.addTimebox(createdTimebox, this.props.accessToken)
+        this.addTimebox(createdTimebox, this.context.accessToken)
     }
 
     handleEdit = (indexToEdit) =>
@@ -48,7 +49,7 @@ class TimeboxList extends React.Component
 
     handleDelete = (indexToDelete) =>
     {
-        TimeboxesAPI.removeTimebox(this.state.timeboxes[indexToDelete], this.props.accessToken)
+        TimeboxesAPI.removeTimebox(this.state.timeboxes[indexToDelete], this.context.accessToken)
         .then(()=>
             this.setState(prevState=>{
                 const timeboxes = prevState.timeboxes.filter((timebox,index) => index !== indexToDelete);
@@ -117,5 +118,7 @@ class TimeboxList extends React.Component
         )
     }
 }
+
+TimeboxList.contextType = AuthenticationContext;
 
 export default TimeboxList;
