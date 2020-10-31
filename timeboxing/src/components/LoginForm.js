@@ -3,7 +3,7 @@ import React from 'react'
 class LoginForm extends React.Component 
 {
     state = {
-        email:"test@hotmail.com",
+        email:"asdf@hotmail.com",
         password:"asdf"
     }
 

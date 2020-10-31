@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 import TimeboxList from './TimeboxList';
 import EditableTimebox from './EditableTimebox';
 import RealTimeClock from './RealTimeClock';
 import ErrorBoundary from './ErrorBoundary';
 import LoginForm from './LoginForm';
-import AuthenticationApi from '../api/FetchAuthenticationApi'
-import Jwt from 'jsonwebtoken'
+import AuthenticationApi from '../api/FetchAuthenticationApi';
+import UserGreeting from './UserGreeting';
 
 class App extends React.Component 
 { 
@@ -16,10 +16,6 @@ class App extends React.Component
 
     isUserLoggedIn() {
         return !!this.state.accessToken;
-    }
-
-    getUserEmail(){
-        return Jwt.decode(this.state.accessToken).email;
     }
 
     handleLoggingAttempt = (credentials) => {
@@ -52,7 +48,7 @@ class App extends React.Component
                         { this.isUserLoggedIn() ? 
                             <>
                                 <header className="header">
-                                    Hi {this.getUserEmail()}
+                                    <UserGreeting accessToken = {this.state.accessToken}/>
                                     <a className="header__logout-link" onClick={this.handleLogout} href="">Sign out</a>
                                 </header>
                                 <RealTimeClock/>
