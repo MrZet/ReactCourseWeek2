@@ -5,7 +5,7 @@ import RealTimeClock from './RealTimeClock';
 import ErrorBoundary from './ErrorBoundary';
 import LoginForm from './LoginForm';
 import AuthenticationApi from '../api/FetchAuthenticationApi';
-import UserGreeting from './UserGreeting';
+import Header from './Header';
 
 class App extends React.Component 
 { 
@@ -47,10 +47,7 @@ class App extends React.Component
                     <ErrorBoundary message="Error in App!">
                         { this.isUserLoggedIn() ? 
                             <>
-                                <header className="header">
-                                    <UserGreeting accessToken = {this.state.accessToken}/>
-                                    <a className="header__logout-link" onClick={this.handleLogout} href="">Sign out</a>
-                                </header>
+                                <Header accessToken = {this.state.accessToken} onLogout = {this.handleLogout}/>
                                 <RealTimeClock/>
                                 <TimeboxList accessToken = {this.state.accessToken} />
                                 <EditableTimebox/>
