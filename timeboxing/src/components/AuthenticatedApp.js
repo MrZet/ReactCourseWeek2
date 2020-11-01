@@ -3,6 +3,7 @@ import Header from './Header'
 import RealTimeClock from './RealTimeClock'
 import TimeboxList from './TimeboxList'
 import EditableTimebox from './EditableTimebox'
+import InspirationalQuote from './InspirationalQuote';
 
 function AuthenticatedApp({onLogout}) {
     return (
@@ -11,6 +12,7 @@ function AuthenticatedApp({onLogout}) {
             <RealTimeClock/>
             <TimeboxList/>
             <EditableTimebox/>
+            <InspirationalQuote/>
         </>
     );
 }

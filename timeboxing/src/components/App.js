@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import LoginForm from './LoginForm';
 import AuthenticationApi from '../api/FetchAuthenticationApi';
-import AuthenticatedApp from './AuthenticatedApp';
 import AuthenticationContext from '../contexts/AuthenticationContext';
+
+const AuthenticatedApp = React.lazy(() => import ('./AuthenticatedApp'));
 
 class App extends React.Component 
 { 
@@ -45,7 +46,9 @@ class App extends React.Component
                     <ErrorBoundary message="Error in App!">
                         { this.isUserLoggedIn() ? 
                             <AuthenticationContext.Provider value = { {accessToken : this.state.accessToken}}>
-                                <AuthenticatedApp onLogout = {this.handleLogout}/>
+                                <Suspense fallback='loading...'>
+                                    <AuthenticatedApp onLogout = {this.handleLogout}/>
+                                </Suspense>
                             </AuthenticationContext.Provider>
                             :<LoginForm 
                                 errorMessage = {this.state.previousLoginAttemptFailed ? "Logging is not available." : null}
