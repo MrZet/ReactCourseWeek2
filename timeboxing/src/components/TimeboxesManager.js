@@ -1,12 +1,11 @@
 import React from 'react'
 import TimeboxCreator from './TimeboxCreator'
-import Timebox from './Timebox'
-import ErrorBoundary from './ErrorBoundary'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
+import { Timeboxes } from './Timeboxes'
 
 
-class TimeboxList extends React.Component
+class TimeboxesManager extends React.Component
 {
     state = {
         timeboxes:[],
@@ -98,27 +97,18 @@ class TimeboxList extends React.Component
                 <TimeboxCreator onCreate = {this.handleCreate}/>
                 {this.state.isLoading? "Components are loading..." : null}
                 {this.state.isError? "Something gone bad :(" : null}
-                {   
-                    this.state.timeboxes.map((timebox, index) => (
-                    <ErrorBoundary key={timebox.id} message = "Something gone bad :(">
-                        <Timebox                            
-                            title = {timebox.title}
-                            totalTimeInMinutes={timebox.totalTimeInMinutes}
-                            onDelete = {() => this.handleDelete(index)}
-                            onEdit = {() => this.handleEdit(index)}
-                            areEditControlsVisible = {timebox.areEditControlsVisible}
-                            //{document.getElementsByClassName("Timebox").addEventListener("")}
-                            //handleEditChange = {() => this.handleEditChange(event, index)}
-                            onConfirm = {() => this.handleConfirm(index)}
-                            hasError = {() => this.handleError(index)}
-                        />
-                    </ErrorBoundary>
-                ))}
+                <Timeboxes 
+                    timeboxes = {this.state.timeboxes} 
+                    onDelete = {this.handleDelete} 
+                    onEdit = {this.handleEdit}
+                    onConfirm = {this.handleConfirm}
+                    onError = {this.handleError}
+                />
             </>
         )
     }
 }
 
-TimeboxList.contextType = AuthenticationContext;
+TimeboxesManager.contextType = AuthenticationContext;
 
-export default TimeboxList;
+export default TimeboxesManager;
