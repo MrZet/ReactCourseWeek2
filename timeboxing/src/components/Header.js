@@ -5,7 +5,7 @@ function Header({onLogout}) {
     return (  
         <header className="header">
         <UserGreeting/>
-        <a className="header__logout-link" onClick={onLogout} href="">Sign out</a>
+        <button className="header__logout-link" onClick={onLogout} href="">Sign out</button>
         </header>);
 }
 
