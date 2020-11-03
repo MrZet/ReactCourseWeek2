@@ -3,6 +3,9 @@ import TimeboxCreator from './TimeboxCreator'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
 import { Timeboxes } from './Timeboxes'
+import ErrorBoundary from './ErrorBoundary';
+import Timebox from './Timebox'
+import TimeboxReadOnly from './TimeboxReadOnly'
 
 
 class TimeboxesManager extends React.Component
@@ -91,19 +94,36 @@ class TimeboxesManager extends React.Component
         })
     }
 
+    renderTimebox = (timebox,index) => {
+        return (
+            <>
+            <ErrorBoundary key={timebox.id} message="Something gone bad :(">
+                <Timebox
+                    title={timebox.title}
+                    totalTimeInMinutes={timebox.totalTimeInMinutes}
+                    onDelete={() =>this.handleDelete(index)}
+                    onEdit={() => this.handleEdit(index)}
+                    areEditControlsVisible={timebox.areEditControlsVisible}
+                    //{document.getElementsByClassName("Timebox").addEventListener("")}
+                    //handleEditChange = {() => this.handleEditChange(event, index)}
+                    onConfirm={() => this.handleConfirm(index)}
+                    hasError={() => this.handleError(index)} 
+                    />
+                </ErrorBoundary>
+            </>)
+    }
+
     render(){
         return (
             <>
                 <TimeboxCreator onCreate = {this.handleCreate}/>
                 {this.state.isLoading? "Components are loading..." : null}
                 {this.state.isError? "Something gone bad :(" : null}
-                <Timeboxes 
-                    timeboxes = {this.state.timeboxes} 
-                    onDelete = {this.handleDelete} 
-                    onEdit = {this.handleEdit}
-                    onConfirm = {this.handleConfirm}
-                    onError = {this.handleError}
+                <Timeboxes                 
+                    timeboxes = {this.state.timeboxes}
+                    renderTimebox = {this.renderTimebox}
                 />
+
             </>
         )
     }
