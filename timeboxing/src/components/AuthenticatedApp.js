@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header'
 import RealTimeClock from './RealTimeClock'
 import TimeboxesManager from './TimeboxesManager'
-import EditableTimebox from './EditableTimebox'
+import EditableCurrentTimebox from './EditableCurrentTimebox'
 import InspirationalQuote from './InspirationalQuote';
 
 function AuthenticatedApp({onLogout}) {
@@ -11,7 +11,7 @@ function AuthenticatedApp({onLogout}) {
             <Header onLogout = {onLogout}/>
             <RealTimeClock/>
             <TimeboxesManager/>
-            <EditableTimebox/>
+            <EditableCurrentTimebox/>
             <InspirationalQuote/>
         </>
     );

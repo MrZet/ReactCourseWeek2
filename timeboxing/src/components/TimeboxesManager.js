@@ -6,6 +6,7 @@ import { Timeboxes } from './Timeboxes'
 import ErrorBoundary from './ErrorBoundary';
 import Timebox from './Timebox'
 import TimeboxReadOnly from './TimeboxReadOnly'
+import TimeboxEditor from './TimeboxEditor'
 
 
 class TimeboxesManager extends React.Component
@@ -39,16 +40,6 @@ class TimeboxesManager extends React.Component
         this.addTimebox(createdTimebox, this.context.accessToken)
     }
 
-    handleEdit = (indexToEdit) =>
-    {
-        this.setState(prevState=>{
-            const timeboxes = prevState.timeboxes.map((timebox,index)=>
-                ({...timebox, areEditControlsVisible: (index === indexToEdit ? true : false)})
-            )
-            return {timeboxes};
-        })
-    }
-
     handleDelete = (indexToDelete) =>
     {
         TimeboxesAPI.removeTimebox(this.state.timeboxes[indexToDelete], this.context.accessToken)
@@ -60,26 +51,17 @@ class TimeboxesManager extends React.Component
         )
     }
 
-    handleEditChange = (event, indexToEdit) => {
-        this.setState(prevState=>{
-            const timeboxes = prevState.timeboxes.map((timebox,index)=>
-                ({...timebox, editInput: (index === indexToEdit ? event.target.value : "")})
+    handleEdit = (indexToUpdate, timeboxToUpdate) => {
+        TimeboxesAPI.replaceTimebox(timeboxToUpdate, this.context.accessToken)
+            .then(
+                (updatedTimebox) => this.setState(prevState => {
+                    const timeboxes = prevState.timeboxes.map((timebox, index) =>
+                        index === indexToUpdate ? updatedTimebox : timebox
+                    )
+                    return { timeboxes };
+                })
             )
-            return {timeboxes};
-        })
-    }
-
-    handleConfirm = (indexToConfirm) =>
-    {
-        this.setState(prevState=>{
-            const timeboxes = prevState.timeboxes.map((timebox,index)=>
-                ({...timebox,
-                    title: (index === indexToConfirm ? timebox.editInput : timebox.title),
-                    areEditControlsVisible: false,
-                    })
-            )
-            return {timeboxes};
-        })
+        
     }
 
     handleError = (indexOfError) =>
@@ -94,20 +76,24 @@ class TimeboxesManager extends React.Component
         })
     }
 
+    handleCancel = () => console.log('Cancelled');
+
     renderTimebox = (timebox,index) => {
         return (
             <>
-            <ErrorBoundary key={timebox.id} message="Something gone bad :(">
-                <Timebox
-                    title={timebox.title}
-                    totalTimeInMinutes={timebox.totalTimeInMinutes}
-                    onDelete={() =>this.handleDelete(index)}
-                    onEdit={() => this.handleEdit(index)}
-                    areEditControlsVisible={timebox.areEditControlsVisible}
-                    //{document.getElementsByClassName("Timebox").addEventListener("")}
-                    //handleEditChange = {() => this.handleEditChange(event, index)}
-                    onConfirm={() => this.handleConfirm(index)}
-                    hasError={() => this.handleError(index)} 
+                <ErrorBoundary key={timebox.id} message="Something gone bad :(">
+                    <Timebox
+                        title={timebox.title}
+                        totalTimeInMinutes={timebox.totalTimeInMinutes}
+                        onDelete={() =>this.handleDelete(index)}
+                        onEdit={() => this.handleEdit(index)}
+                        hasError={() => this.handleError(index)} 
+                    />
+                    <TimeboxEditor
+                        initialTitle = {timebox.title}
+                        initialTotalTimeInMinutes = {timebox.totalTimeInMinutes}
+                        onCancel = {timebox.handleCancel}
+                        onUpdate = {(updatedTimebox) => this.handleEdit(index,{...timebox,...updatedTimebox})}
                     />
                 </ErrorBoundary>
             </>)
@@ -123,7 +109,6 @@ class TimeboxesManager extends React.Component
                     timeboxes = {this.state.timeboxes}
                     renderTimebox = {this.renderTimebox}
                 />
-
             </>
         )
     }

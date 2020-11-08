@@ -14,6 +14,14 @@ const FetchTimeboxesAPI = {
         const addedTimebox = await response.json()
         return addedTimebox;
     },
+    replaceTimebox: async function(timeboxToReplace, accessToken) {
+        if (!timeboxToReplace.id) {
+            throw new Error("Timebox has to have an id to be updated");
+        }
+        const response = await makeRequest(`${BASE_URL}/${timeboxToReplace.id}`, "PUT", timeboxToReplace, accessToken)
+        const replacedTimebox = await response.json();
+        return replacedTimebox;
+    },
     removeTimebox: async function (timeboxToRemove, accessToken){
         if(!timeboxToRemove.id)
         {

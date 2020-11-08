@@ -1,8 +1,8 @@
 import React from 'react'
-import TimeboxEditor from './TimeboxEditor'
+import CurrentTimeboxEditor from './CurrentTimeboxEditor'
 import CurrentTimebox from './CurrentTimebox'
 
-class EditableTimebox extends React.Component {
+class EditableCurrentTimebox extends React.Component {
     state = {
         title: "Uczę się gry na gitarze",
         totalTimeInMinutes: 27,
@@ -30,7 +30,7 @@ class EditableTimebox extends React.Component {
         const {title, totalTimeInMinutes, isEditible} = this.state;
         return (
             <>
-                {isEditible?(<TimeboxEditor 
+                {isEditible?(<CurrentTimeboxEditor 
                     title = {title}
                     totalTimeInMinutes = {totalTimeInMinutes}
                     onTitleChange = {this.handleTitleChange} 
@@ -49,4 +49,4 @@ class EditableTimebox extends React.Component {
     }
 }
 
-export default EditableTimebox;
+export default EditableCurrentTimebox;
