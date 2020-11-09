@@ -24,11 +24,21 @@ class TimeboxEditor extends React.Component
                 title:this.state.title, 
                 totalTimeInMinutes:this.state.totalTimeInMinutes
             });
-        this.setState({
-            title:""
-            , totalTimeInMinutes:""
-        })
+        this.resetToInitialValues();
     }
+
+    handleCancel = () => {
+        this.resetToInitialValues();
+        this.props.onCancel();
+    }
+
+    resetToInitialValues() {
+        this.setState({
+            title: this.props.initialTitle,
+            totalTimeInMinutes: this.props.initialTotalTimeInMinutes
+        });
+    }
+
     render(){
         return (
             <form 
@@ -48,7 +58,7 @@ class TimeboxEditor extends React.Component
                         value = {this.state.totalTimeInMinutes}
                     />
                 </label><br/>
-                <a onClick={this.props.onCancel}>Cancel</a>
+                <a onClick={this.handleCancel}>Cancel</a>
                 <button>Save changes</button>
             </form>
         )

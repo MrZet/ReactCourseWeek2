@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header'
 import RealTimeClock from './RealTimeClock'
 import TimeboxesManager from './TimeboxesManager'
-import EditableCurrentTimebox from './EditableCurrentTimebox'
+import CurrentTimebox from './CurrentTimebox'
 import InspirationalQuote from './InspirationalQuote';
 
 function AuthenticatedApp({onLogout}) {
@@ -11,7 +11,10 @@ function AuthenticatedApp({onLogout}) {
             <Header onLogout = {onLogout}/>
             <RealTimeClock/>
             <TimeboxesManager/>
-            <EditableCurrentTimebox/>
+            <CurrentTimebox 
+                    title = "Uczę się gry na gitarze" 
+                    totalTimeInMinutes = {27}
+                />)      
             <InspirationalQuote/>
         </>
     );

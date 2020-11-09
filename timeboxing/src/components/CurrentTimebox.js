@@ -77,18 +77,17 @@ class CurrentTimebox extends React.Component
 
     render() {
         const {isRunning, isPaused, pausesCount, elapsedTimeInSeconds} = this.state;
-        const {title, totalTimeInMinutes, isEditible, onEdit} = this.props;
+        const {title, totalTimeInMinutes} = this.props;
         const totalTimeInSeconds = totalTimeInMinutes * 60;
         const timeLeftInSeconds = totalTimeInSeconds - elapsedTimeInSeconds;
         const [minutesPartOfElapsedTime, secondsPartOfElapsedTime] = getMinutesAndSecondsFromTimeGivenInSeconds(timeLeftInSeconds)
         const progressInPercent = (elapsedTimeInSeconds/totalTimeInSeconds)*100;
         return (
-            <div className={`CurrentTimebox ${isEditible?"inactive":""}`}>
+            <div className="CurrentTimebox">
                 <h1>{title}</h1>
                 <Clock hours={0} minutes={minutesPartOfElapsedTime} seconds={secondsPartOfElapsedTime} miliseconds={0} className={isPaused ? "inactive" : ""}>Left</Clock>
                 <ProgressBar percent={progressInPercent} trackRemaining={true} className={isPaused ? "inactive" : ""} big color = "orangered"/>
                 <br/> 
-                <button onClick={onEdit} disabled = {isEditible}>Edit</button>
                 <button onClick={this.handleStart} disabled = {isRunning}>Start</button>
                 <button onClick={this.handleStop} disabled = {!isRunning}>Stop</button>
                 <button onClick={this.togglePause} disabled = {!isRunning}>{isPaused?"Resume":"Pause"}</button>

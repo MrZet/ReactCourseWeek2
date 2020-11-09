@@ -15,7 +15,8 @@ class TimeboxesManager extends React.Component
         timeboxes:[],
         hasError:false,
         isLoading:true,
-        isError:false
+        isError:false,
+        editIndex: null
     }
 
     componentDidMount(){
@@ -81,20 +82,28 @@ class TimeboxesManager extends React.Component
     renderTimebox = (timebox,index) => {
         return (
             <>
-                <ErrorBoundary key={timebox.id} message="Something gone bad :(">
-                    <Timebox
-                        title={timebox.title}
-                        totalTimeInMinutes={timebox.totalTimeInMinutes}
-                        onDelete={() =>this.handleDelete(index)}
-                        onEdit={() => this.handleEdit(index)}
-                        hasError={() => this.handleError(index)} 
-                    />
+                <ErrorBoundary key={timebox.id} message="Something gone bad :(">                   
+                    {this.state.editIndex === index ?
                     <TimeboxEditor
                         initialTitle = {timebox.title}
                         initialTotalTimeInMinutes = {timebox.totalTimeInMinutes}
-                        onCancel = {timebox.handleCancel}
-                        onUpdate = {(updatedTimebox) => this.handleEdit(index,{...timebox,...updatedTimebox})}
+                        onCancel = {() => this.setState({editIndex:null})}
+                        onUpdate = {(updatedTimebox) => {
+                            this.handleEdit(index,{...timebox,...updatedTimebox});
+                            this.setState({editIndex : null});
+                        }}
                     />
+                    :  <Timebox
+                    title={timebox.title}
+                    totalTimeInMinutes={timebox.totalTimeInMinutes}
+                    onDelete={() =>this.handleDelete(index)}
+                    onEdit={() => {
+                            this.state.editIndex === null || this.state.editIndex !== index
+                            ? this.setState({editIndex:index})
+                            : this.setState({editIndex : null});
+                        }}
+                    hasError={() => this.handleError(index)} 
+                />}
                 </ErrorBoundary>
             </>)
     }
