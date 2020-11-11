@@ -5,7 +5,7 @@ import AuthenticationContext from '../contexts/AuthenticationContext'
 import { Timeboxes } from './Timeboxes'
 import ErrorBoundary from './ErrorBoundary';
 import Timebox from './Timebox'
-import TimeboxReadOnly from './TimeboxReadOnly'
+// import TimeboxReadOnly from './TimeboxReadOnly'
 import TimeboxEditor from './TimeboxEditor'
 
 
@@ -81,7 +81,6 @@ class TimeboxesManager extends React.Component
 
     renderTimebox = (timebox,index) => {
         return (
-            <>
                 <ErrorBoundary key={timebox.id} message="Something gone bad :(">                   
                     {this.state.editIndex === index ?
                     <TimeboxEditor
@@ -105,7 +104,7 @@ class TimeboxesManager extends React.Component
                     hasError={() => this.handleError(index)} 
                 />}
                 </ErrorBoundary>
-            </>)
+        )
     }
 
     render(){
