@@ -1,11 +1,12 @@
 import React from 'react'
-import UserGreeting from './UserGreeting';
 
-function Header({onLogout}) {
+function Header({children}) {
+    if(React.Children.count(children)<1){
+        throw new Error("Header has to have at least one child!")
+    }
     return (  
         <header className="header">
-        <UserGreeting/>
-        <button className="header__logout-link" onClick={onLogout} href="">Sign out</button>
+            {children}
         </header>);
 }
 
