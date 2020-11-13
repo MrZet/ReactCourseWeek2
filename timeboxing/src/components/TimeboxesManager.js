@@ -7,52 +7,27 @@ import ErrorBoundary from './ErrorBoundary';
 import Timebox from './Timebox'
 // import TimeboxReadOnly from './TimeboxReadOnly'
 import TimeboxEditor from './TimeboxEditor'
-
-const useLegacySetState = (initialState) => {
-    const reducer = (prevState, changedState) => {
-        let newState = prevState;
-        if(typeof changedState === "function"){
-            newState = changedState(prevState);
-        } else {
-            newState = {...prevState, ...changedState};
-        }
-        return newState;
-    };
-
-    return useReducer(reducer, initialState);
-}
-
+import {timeboxReducer} from '../reducers'
 
 
 function TimeboxesManager()
 {
-    const initialState = {
-        timeboxes:[],
-        hasError:false,
-        isLoading:true,
-        isError:false,
-        editIndex: null
-    }
-
-    const [state, setState] = useLegacySetState(initialState);
+    const [state, dispatch] = useReducer(timeboxReducer, undefined, timeboxReducer);
 
     const {accessToken} = useContext(AuthenticationContext);
 
     useEffect(() => {
             TimeboxesAPI.getAllTimeboxes(accessToken)
-                .then((resolve) => setState({timeboxes:resolve}))
-                .catch(() => setState({isError:true}))
-                .finally(() => setState({isLoading:false}));
+                .then((timeboxes) => dispatch({type: "TIMEBOXES_SET",timeboxes}))
+                .catch((error) => dispatch({type : "ERROR_SET", error}))
+                .finally(() => dispatch({type: "LOADING_INDICATOR_DISABLE"}));
         }, []
     );
 
     const addTimebox = (timebox) => {
         TimeboxesAPI.addTimebox(timebox, accessToken)
-            .then((addedTimebox)=>{
-                setState(prevState=>{
-                const timeboxes = [...prevState.timeboxes, addedTimebox];
-                return {timeboxes};
-            })
+            .then((timebox)=>{
+                dispatch({type: "TIMEBOX_ADD", timebox})
         })
     }
 
@@ -61,67 +36,42 @@ function TimeboxesManager()
         addTimebox(createdTimebox, accessToken)
     }
 
-    const handleDelete = (indexToDelete) =>
+    const handleDelete = (timeboxToRemove) =>
     {
-        TimeboxesAPI.removeTimebox(state.timeboxes[indexToDelete], accessToken)
-        .then(()=>
-            setState(prevState=>{
-                const timeboxes = prevState.timeboxes.filter((timebox,index) => index !== indexToDelete);
-                return {timeboxes};
-            })
+        TimeboxesAPI.removeTimebox(timeboxToRemove, accessToken)
+        .then(() => dispatch({type: "TIMEBOX_REMOVE", removedTimebox: timeboxToRemove})
         )
     }
 
-    const handleEdit = (indexToUpdate, timeboxToUpdate) => {
+    const handleEdit = (timeboxToUpdate) => {
         TimeboxesAPI.replaceTimebox(timeboxToUpdate, accessToken)
             .then(
-                (updatedTimebox) => setState(prevState => {
-                    const timeboxes = prevState.timeboxes.map((timebox, index) =>
-                        index === indexToUpdate ? updatedTimebox : timebox
-                    )
-                    return { timeboxes };
-                })
-            )
-        
+                (replacedTimebox) => dispatch({type:"TIMEBOX_REPLACE", replacedTimebox})
+            )        
     }
 
-    const handleError = (indexOfError) =>
-    {
-        setState(prevState=>{
-            const timeboxes = prevState.timeboxes.map((timebox,index)=>
-                ({...timebox,
-                    hasError: (index === indexOfError ? true : timebox.hasError)
-                    })
-            )
-            return {timeboxes};
-        })
-    }
-
-    const handleCancel = () => console.log('Cancelled');
-
-    const renderTimebox = (timebox,index) => {
+    const renderTimebox = (timebox) => {
         return (
                 <ErrorBoundary key={timebox.id} message="Something gone bad :(">                   
-                    {state.editIndex === index ?
+                    {state.currentlyEditedTimeboxId === timebox.id ?
                     <TimeboxEditor
                         initialTitle = {timebox.title}
                         initialTotalTimeInMinutes = {timebox.totalTimeInMinutes}
-                        onCancel = {() => setState({editIndex:null})}
+                        onCancel = {() => dispatch({type: "TIMEBOX_EDIT_STOP"})}
                         onUpdate = {(updatedTimebox) => {
-                            handleEdit(index,{...timebox,...updatedTimebox});
-                            setState({editIndex : null});
+                            handleEdit({...timebox,...updatedTimebox});
+                            dispatch({type: "TIMEBOX_EDIT_STOP"});
                         }}
                     />
                     :  <Timebox
                     title={timebox.title}
                     totalTimeInMinutes={timebox.totalTimeInMinutes}
-                    onDelete={() =>handleDelete(index)}
+                    onDelete={() =>handleDelete(timebox)}
                     onEdit={() => {
-                            state.editIndex === null || state.editIndex !== index
-                            ? setState({editIndex:index})
-                            : setState({editIndex : null});
-                        }}
-                    hasError={() => handleError(index)} 
+                            state.currentlyEditedTimeboxId !== timebox.id
+                            ? dispatch({type: "TIMEBOX_EDIT_START", currentlyEditedTimeboxId: timebox.id})
+                            : dispatch({type: "TIMEBOX_EDIT_STOP"});
+                        }}                    
                 />}
                 </ErrorBoundary>
         )
