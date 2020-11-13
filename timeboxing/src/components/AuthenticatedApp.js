@@ -18,7 +18,7 @@ function AuthenticatedApp({onLogout}) {
             <CurrentTimebox 
                     title = "Uczę się gry na gitarze" 
                     totalTimeInMinutes = {27}
-                />)      
+                />   
             <InspirationalQuote/>
         </>
     );
