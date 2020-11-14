@@ -1,4 +1,4 @@
-import React,{useEffect, useContext, useReducer} from 'react'
+import React,{useEffect, useContext, useReducer, useState} from 'react'
 import TimeboxCreator from './TimeboxCreator'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
@@ -10,16 +10,35 @@ import TimeboxEditor from './TimeboxEditor'
 import {timeboxReducer} from '../reducers'
 import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimebox, startTimeboxEdit } from '../actions'
 import {getAllTimeboxes, areTimeboxesLoading, getTimeboxesLoadingError, isTimeboxEdited} from '../reducers'
+import {createStore} from 'redux'
+
+const store = createStore(timeboxReducer);
+
+function useForceUpdate() {
+    const [updateCounter, setUpdateCounter] = useState(0);
+
+    function forceUpdate() { 
+        setUpdateCounter(prevState => prevState + 1);
+    }
+
+    return forceUpdate;
+}
 
 function TimeboxesManager()
 {
-    const [state, dispatch] = useReducer(timeboxReducer, undefined, timeboxReducer);
+    const forceUpdate = useForceUpdate();
+    const state = store.getState();
+    const dispatch = store.dispatch;
+    
+    useEffect(() => store.subscribe(forceUpdate), [])
 
     const {accessToken} = useContext(AuthenticationContext);    
 
     useEffect(() => {
             TimeboxesAPI.getAllTimeboxes(accessToken)
-                .then((timeboxes) => dispatch(setTimebox(timeboxes)))
+                .then((timeboxes) => {
+                    dispatch(setTimebox(timeboxes));
+                })
                 .catch((error) => dispatch(setError(error)))
                 .finally(() => dispatch(disableLoadingIndicator()));
         }, []

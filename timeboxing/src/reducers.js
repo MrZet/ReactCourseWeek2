@@ -1,7 +1,7 @@
 const initialState = {
     timeboxes:[],
-    isLoading:true,
-    isError:false,
+    timeboxesAreLoading:true,
+    timeboxesLoadingError:false,
     currentlyEditedTimeboxId: null
 }
 
@@ -46,8 +46,8 @@ export const timeboxReducer = (state = initialState, action = {}) => {
 }
 
 export const getAllTimeboxes = (state) => state.timeboxes;
-export const areTimeboxesLoading = (state) => state.isLoading; 
-export const getTimeboxesLoadingError = (state) => state.isError;
+export const areTimeboxesLoading = (state) => state.timeboxesAreLoading; 
+export const getTimeboxesLoadingError = (state) => state.timeboxesLoadingError;
 export const isTimeboxEdited = (state, timebox) => state.currentlyEditedTimeboxId && state.currentlyEditedTimeboxId === timebox.id;
 export const getTimeboxById = (state, timebox) => state.timeboxes.find(t=>t.id === timebox.id);
 export const getCurrentlyEditedTimeboxId = (state) => getTimeboxById(state, state.currentlyEditedTimeboxId);
