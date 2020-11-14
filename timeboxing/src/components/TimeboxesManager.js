@@ -9,12 +9,13 @@ import Timebox from './Timebox'
 import TimeboxEditor from './TimeboxEditor'
 import {timeboxReducer} from '../reducers'
 import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimebox, startTimeboxEdit } from '../actions'
+import {getAllTimeboxes, areTimeboxesLoading, getTimeboxesLoadingError, isTimeboxEdited} from '../reducers'
 
 function TimeboxesManager()
 {
     const [state, dispatch] = useReducer(timeboxReducer, undefined, timeboxReducer);
 
-    const {accessToken} = useContext(AuthenticationContext);
+    const {accessToken} = useContext(AuthenticationContext);    
 
     useEffect(() => {
             TimeboxesAPI.getAllTimeboxes(accessToken)
@@ -33,7 +34,7 @@ function TimeboxesManager()
     const renderTimebox = (timebox) => {
         return (
                 <ErrorBoundary key={timebox.id} message="Something gone bad :(">                   
-                    {state.currentlyEditedTimeboxId === timebox.id ?
+                    {isTimeboxEdited(state, timebox) ?
                     <TimeboxEditor
                         initialTitle = {timebox.title}
                         initialTotalTimeInMinutes = {timebox.totalTimeInMinutes}
@@ -54,7 +55,7 @@ function TimeboxesManager()
                             .then(() => dispatch(removeTimebox(timebox))
                             )}}
                     onEdit={() => {
-                            state.currentlyEditedTimeboxId !== timebox.id
+                            !isTimeboxEdited(state, timebox)
                             ? dispatch(startTimeboxEdit(timebox))
                             : dispatch(stopTimeboxEdit());
                         }}                    
@@ -66,10 +67,10 @@ function TimeboxesManager()
     return (
         <>
             <TimeboxCreator onCreate = {handleCreate}/>
-            {state.isLoading? "Components are loading..." : null}
-            {state.isError? "Something gone bad :(" : null}
+            {areTimeboxesLoading(state)? "Components are loading..." : null}
+            {getTimeboxesLoadingError(state)? "Something gone bad :(" : null}
             <Timeboxes                 
-                timeboxes = {state.timeboxes}
+                timeboxes = {getAllTimeboxes(state)}
                 renderTimebox = {renderTimebox}
             />
         </>
