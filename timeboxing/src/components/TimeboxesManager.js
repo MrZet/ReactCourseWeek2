@@ -1,4 +1,5 @@
 import React,{useEffect, useContext, useReducer, useState} from 'react'
+import {useStore} from 'react-redux'
 import TimeboxCreator from './TimeboxCreator'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
@@ -9,7 +10,6 @@ import Timebox from './Timebox'
 import TimeboxEditor from './TimeboxEditor'
 import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimebox, startTimeboxEdit } from '../actions'
 import {getAllTimeboxes, areTimeboxesLoading, getTimeboxesLoadingError, isTimeboxEdited} from '../reducers'
-import {StoreContext} from '../index';
 
 function useForceUpdate() {
     const [updateCounter, setUpdateCounter] = useState(0);
@@ -23,7 +23,7 @@ function useForceUpdate() {
 
 function TimeboxesManager()
 {
-    const {store} = useContext(StoreContext);
+    const store = useStore();
     const forceUpdate = useForceUpdate();
     const state = store.getState();
     const dispatch = store.dispatch;
