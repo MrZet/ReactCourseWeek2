@@ -3,13 +3,13 @@ import {useStore} from 'react-redux'
 import TimeboxCreator from './TimeboxCreator'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
-import { Timeboxes } from './Timeboxes'
+import { AllTimeboxes } from './Timeboxes'
 import ErrorBoundary from './ErrorBoundary';
 import Timebox from './Timebox'
 // import TimeboxReadOnly from './TimeboxReadOnly'
 import TimeboxEditor from './TimeboxEditor'
 import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimebox, startTimeboxEdit } from '../actions'
-import {getAllTimeboxes, areTimeboxesLoading, getTimeboxesLoadingError, isTimeboxEdited} from '../reducers'
+import {areTimeboxesLoading, getTimeboxesLoadingError, isTimeboxEdited} from '../reducers'
 
 function useForceUpdate() {
     const [updateCounter, setUpdateCounter] = useState(0);
@@ -86,10 +86,7 @@ function TimeboxesManager()
             <TimeboxCreator onCreate = {handleCreate}/>
             {areTimeboxesLoading(state)? "Components are loading..." : null}
             {getTimeboxesLoadingError(state)? "Something gone bad :(" : null}
-            <Timeboxes                 
-                timeboxes = {getAllTimeboxes(state)}
-                renderTimebox = {renderTimebox}
-            />
+            <AllTimeboxes renderTimebox = {renderTimebox}/>
         </>
     )
 }
