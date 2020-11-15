@@ -7,12 +7,9 @@ import ErrorBoundary from './ErrorBoundary';
 import Timebox from './Timebox'
 // import TimeboxReadOnly from './TimeboxReadOnly'
 import TimeboxEditor from './TimeboxEditor'
-import {timeboxReducer} from '../reducers'
 import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimebox, startTimeboxEdit } from '../actions'
 import {getAllTimeboxes, areTimeboxesLoading, getTimeboxesLoadingError, isTimeboxEdited} from '../reducers'
-import {createStore} from 'redux'
-
-const store = createStore(timeboxReducer);
+import {StoreContext} from '../index';
 
 function useForceUpdate() {
     const [updateCounter, setUpdateCounter] = useState(0);
@@ -26,6 +23,7 @@ function useForceUpdate() {
 
 function TimeboxesManager()
 {
+    const {store} = useContext(StoreContext);
     const forceUpdate = useForceUpdate();
     const state = store.getState();
     const dispatch = store.dispatch;
