@@ -5,7 +5,7 @@ import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
 import { AllTimeboxes } from './Timeboxes'
 // import TimeboxReadOnly from './TimeboxReadOnly'
-import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimebox, startTimeboxEdit } from '../actions'
+import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimeboxRemotely, startTimeboxEdit, fetchAllTimeboxes } from '../actions'
 import {areTimeboxesLoading, getTimeboxesLoadingError} from '../reducers'
 import { EditableTimebox } from './EditableTimebox'
 
@@ -18,12 +18,7 @@ function TimeboxesManager()
     const {accessToken} = useContext(AuthenticationContext);    
 
     useEffect(() => {
-            TimeboxesAPI.getAllTimeboxes(accessToken)
-                .then((timeboxes) => {
-                    dispatch(setTimebox(timeboxes));
-                })
-                .catch((error) => dispatch(setError(error)))
-                .finally(() => dispatch(disableLoadingIndicator()));
+            dispatch(fetchAllTimeboxes(accessToken))
         }, []
     );
 
@@ -41,9 +36,7 @@ function TimeboxesManager()
             dispatch(stopTimeboxEdit())
         }
         const onDelete = () => {
-            TimeboxesAPI.removeTimebox(timebox, accessToken)
-            .then(() => dispatch(removeTimebox(timebox))
-            )
+            dispatch(removeTimeboxRemotely(accessToken, timebox))
         }        
 
         return (<EditableTimebox 
