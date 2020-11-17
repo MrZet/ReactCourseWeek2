@@ -4,12 +4,10 @@ import TimeboxCreator from './TimeboxCreator'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
 import { AllTimeboxes } from './Timeboxes'
-import ErrorBoundary from './ErrorBoundary';
-import Timebox from './Timebox'
 // import TimeboxReadOnly from './TimeboxReadOnly'
-import TimeboxEditor from './TimeboxEditor'
 import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxEdit, replaceTimebox, removeTimebox, startTimeboxEdit } from '../actions'
-import {areTimeboxesLoading, getTimeboxesLoadingError, isTimeboxEdited} from '../reducers'
+import {areTimeboxesLoading, getTimeboxesLoadingError} from '../reducers'
+import { EditableTimebox } from './EditableTimebox'
 
 function useForceUpdate() {
     const [updateCounter, setUpdateCounter] = useState(0);
@@ -49,36 +47,23 @@ function TimeboxesManager()
     }
 
     const renderTimebox = (timebox) => {
-        return (
-                <ErrorBoundary key={timebox.id} message="Something gone bad :(">                   
-                    {isTimeboxEdited(state, timebox) ?
-                    <TimeboxEditor
-                        initialTitle = {timebox.title}
-                        initialTotalTimeInMinutes = {timebox.totalTimeInMinutes}
-                        onCancel = {() => dispatch(stopTimeboxEdit())}
-                        onUpdate = {(updatedTimebox) => {
-                            const timeboxToUpdate = {...timebox,...updatedTimebox};
-                            TimeboxesAPI.replaceTimebox(timeboxToUpdate, accessToken)
-                            .then(
-                                (replacedTimebox) => dispatch(replaceTimebox(replacedTimebox))
-                            )    
-                            dispatch(stopTimeboxEdit());
-                        }}
-                    />
-                    :  <Timebox
-                    title={timebox.title}
-                    totalTimeInMinutes={timebox.totalTimeInMinutes}
-                    onDelete={() => {TimeboxesAPI.removeTimebox(timebox, accessToken)
-                            .then(() => dispatch(removeTimebox(timebox))
-                            )}}
-                    onEdit={() => {
-                            !isTimeboxEdited(state, timebox)
-                            ? dispatch(startTimeboxEdit(timebox))
-                            : dispatch(stopTimeboxEdit());
-                        }}                    
-                />}
-                </ErrorBoundary>
-        )
+        const onUpdate = (updatedTimebox) => {
+            const timeboxToUpdate = { ...timebox, ...updatedTimebox }
+            TimeboxesAPI.replaceTimebox(timeboxToUpdate, accessToken)
+                .then((replacedTimebox) => dispatch(replaceTimebox(replacedTimebox)))
+            dispatch(stopTimeboxEdit())
+        }
+        const onDelete = () => {
+            TimeboxesAPI.removeTimebox(timebox, accessToken)
+            .then(() => dispatch(removeTimebox(timebox))
+            )
+        }        
+
+        return (<EditableTimebox 
+            timebox = {timebox}
+            onUpdate = {onUpdate}
+            onDelete = {onDelete}
+        />)
     }
 
     return (
