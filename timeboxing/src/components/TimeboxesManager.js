@@ -1,5 +1,5 @@
-import React,{useEffect, useContext, useReducer, useState} from 'react'
-import {useStore} from 'react-redux'
+import React,{useEffect, useContext} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import TimeboxCreator from './TimeboxCreator'
 import TimeboxesAPI from '../api/FetchTimeboxesApi'
 import AuthenticationContext from '../contexts/AuthenticationContext'
@@ -9,24 +9,11 @@ import { setTimebox, setError, disableLoadingIndicator, addTimebox, stopTimeboxE
 import {areTimeboxesLoading, getTimeboxesLoadingError} from '../reducers'
 import { EditableTimebox } from './EditableTimebox'
 
-function useForceUpdate() {
-    const [updateCounter, setUpdateCounter] = useState(0);
-
-    function forceUpdate() { 
-        setUpdateCounter(prevState => prevState + 1);
-    }
-
-    return forceUpdate;
-}
-
 function TimeboxesManager()
 {
-    const store = useStore();
-    const forceUpdate = useForceUpdate();
-    const state = store.getState();
-    const dispatch = store.dispatch;
-    
-    useEffect(() => store.subscribe(forceUpdate), [])
+    const dispatch = useDispatch();
+    const timeboxesLoading = useSelector(areTimeboxesLoading);
+    const timeboxesLoadingError = useSelector(getTimeboxesLoadingError);
 
     const {accessToken} = useContext(AuthenticationContext);    
 
@@ -69,8 +56,8 @@ function TimeboxesManager()
     return (
         <>
             <TimeboxCreator onCreate = {handleCreate}/>
-            {areTimeboxesLoading(state)? "Components are loading..." : null}
-            {getTimeboxesLoadingError(state)? "Something gone bad :(" : null}
+            {timeboxesLoading? "Components are loading..." : null}
+            {timeboxesLoadingError? "Something gone bad :(" : null}
             <AllTimeboxes renderTimebox = {renderTimebox}/>
         </>
     )
