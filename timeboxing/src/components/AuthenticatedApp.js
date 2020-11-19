@@ -15,10 +15,7 @@ function AuthenticatedApp({onLogout}) {
             </Header>
             <RealTimeClock/>
             <TimeboxesManager/>
-            <CurrentTimebox 
-                    title = "Uczę się gry na gitarze" 
-                    totalTimeInMinutes = {27}
-                />   
+            <CurrentTimebox/>   
             <InspirationalQuote/>
         </>
     );

@@ -2,7 +2,8 @@ const initialState = {
     timeboxes:[],
     timeboxesAreLoading:true,
     timeboxesLoadingError:false,
-    currentlyEditedTimeboxId: null
+    currentlyEditedTimeboxId: null,
+    currentStartedTimeboxId: null
 }
 
 export const timeboxReducer = (state = initialState, action = {}) => {
@@ -31,8 +32,9 @@ export const timeboxReducer = (state = initialState, action = {}) => {
         }
         case "TIMEBOX_REMOVE":{
             const {removedTimebox} = action;
-            const timeboxes = state.timeboxes.filter((timebox) => timebox.id !== removedTimebox.id)
-            return {...state, timeboxes};
+            const timeboxes = state.timeboxes.filter((timebox) => timebox.id !== removedTimebox.id);
+            const currentStartedTimeboxId = state.currentStartedTimeboxId === removedTimebox.id ? null : state.currentStartedTimeboxId;
+            return {...state, timeboxes, currentStartedTimeboxId};
         }
         case "LOADING_INDICATOR_DISABLE":{
             return {...state, timeboxesAreLoading:false};
@@ -40,6 +42,10 @@ export const timeboxReducer = (state = initialState, action = {}) => {
         case "ERROR_SET":{
             const {timeboxesLoadingError} = action;
             return {...state, timeboxesLoadingError};
+        }
+        case "TIMEBOX_START":{
+            const {timebox} = action;
+            return {...state, currentStartedTimeboxId : timebox.id};
         }
         default : return state
     }
@@ -49,6 +55,9 @@ export const getAllTimeboxes = (state) => state.timeboxes;
 export const areTimeboxesLoading = (state) => state.timeboxesAreLoading; 
 export const getTimeboxesLoadingError = (state) => state.timeboxesLoadingError;
 export const isTimeboxEdited = (state, timebox) => state.currentlyEditedTimeboxId && state.currentlyEditedTimeboxId === timebox.id;
-export const getTimeboxById = (state, timebox) => state.timeboxes.find(t=>t.id === timebox.id);
+export const getTimeboxById = (state, timeboxId) => state.timeboxes.find(t=>t.id === timeboxId);
 export const getCurrentlyEditedTimeboxId = (state) => getTimeboxById(state, state.currentlyEditedTimeboxId);
 export const isAnyTimeboxEdited = (state) => !!state.currentlyEditedTimeboxId;
+export const isAnyTimeboxStartedNow = (state) => !!state.currentStartedTimeboxId;
+export const getStartedTimebox = (state) => 
+    isAnyTimeboxStartedNow(state) ? getTimeboxById(state, state.currentStartedTimeboxId) : null;

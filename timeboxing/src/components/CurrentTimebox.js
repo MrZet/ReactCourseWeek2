@@ -2,6 +2,8 @@ import React from 'react'
 import Clock from './Clock'
 import ProgressBar from './ProgressBar'
 import {getMinutesAndSecondsFromTimeGivenInSeconds} from '../lib/time'
+import {getStartedTimebox} from '../reducers'
+import { connect } from 'react-redux'
 
 class CurrentTimebox extends React.Component
 {
@@ -97,4 +99,20 @@ class CurrentTimebox extends React.Component
     }
 }
 
-export default CurrentTimebox;
+function CurrentTimeboxOrNothing({startedTimebox}) {
+    if(startedTimebox) {
+        const {title, totalTimeInMinutes} = startedTimebox;
+        return <CurrentTimebox title = {title} totalTimeInMinutes = {totalTimeInMinutes}/>
+    } else {
+        return null;
+    }
+}
+
+function mapStateToProps(state) {
+    const startedTimebox = getStartedTimebox(state);
+    return {
+        startedTimebox
+    }
+}
+
+export default connect(mapStateToProps)(CurrentTimeboxOrNothing);

@@ -8,6 +8,8 @@ export const removeTimebox = timebox => ({ type: "TIMEBOX_REMOVE", removedTimebo
 export const replaceTimebox = timebox => ({ type: "TIMEBOX_REPLACE", replacedTimebox: timebox });
 export const startTimeboxEdit = timebox => ({ type: "TIMEBOX_EDIT_START", currentlyEditedTimeboxId: timebox.id });
 export const stopTimeboxEdit = () => ({ type: "TIMEBOX_EDIT_STOP" });
+export const startTimeboxNow = timebox => ({ type: "TIMEBOX_START", timebox });
+
 
 export const fetchAllTimeboxes = (accessToken) => (dispatch) => {
 TimeboxesAPI.getAllTimeboxes(accessToken)
