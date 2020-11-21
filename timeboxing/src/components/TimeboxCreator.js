@@ -37,6 +37,7 @@ class TimeboxCreator extends React.Component
                         type="number"
                         onChange = {this.handleTotalTimeInMinutesChange}
                         value = {this.state.totalTimeInMinutes}
+                        step = "0.01"
                     />
                 </label><br/>
                 <button>Add timebox</button>

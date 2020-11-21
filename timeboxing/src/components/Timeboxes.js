@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { getAllTimeboxes } from "../reducers";
+import { getAllTimeboxes, getRemainingTimeboxes } from "../reducers";
 
 export function Timeboxes({ timeboxes, renderTimebox }) {
     return (
@@ -7,6 +7,6 @@ export function Timeboxes({ timeboxes, renderTimebox }) {
     );
 }
 
-const mapStateToProps = (state) => ({timeboxes: getAllTimeboxes(state)});
-export const AllTimeboxes = connect(mapStateToProps)(Timeboxes);
+export const AllTimeboxes = connect((state) => ({timeboxes: getAllTimeboxes(state)}))(Timeboxes);
+export const RemainingTimeboxes = connect((state) => ({timeboxes: getRemainingTimeboxes(state)}))(Timeboxes);
 

@@ -4,6 +4,7 @@ import ProgressBar from './ProgressBar'
 import {getMinutesAndSecondsFromTimeGivenInSeconds} from '../lib/time'
 import {getStartedTimebox} from '../reducers'
 import { connect } from 'react-redux'
+import {finishCurrentTimebox} from '../actions'
 
 class CurrentTimebox extends React.Component
 {
@@ -12,6 +13,7 @@ class CurrentTimebox extends React.Component
         this.state = {
             isRunning:false,
             isPaused:false,
+            isFinished: false,
             pausesCount:0,
             elapsedTimeInSeconds:0
         }
@@ -22,20 +24,39 @@ class CurrentTimebox extends React.Component
         this.intervalId = null;
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(!prevState.isFinished && this.state.isFinished) {
+            this.props.onFinish();
+        }
+    }
+
     componentWillUnmount(){
         console.log("CurrentTimebox it's about to unload.");
         this.stopTimer();
     }
 
-    startTimer()
-    {
-        if(this.intervalId === null){
+    startTimer() {
+        if(this.intervalId === null) {
             this.intervalId = window.setInterval(
                 () => {
-                    this.setState((prevState) => ({elapsedTimeInSeconds:prevState.elapsedTimeInSeconds + 0.1}))
-                }
-                ,100
-        )}
+                    this.setState(
+                        (prevState) => { 
+                            const {totalTimeInMinutes} = this.props;
+                            const totalTimeInSeconds = totalTimeInMinutes * 60;
+                            const elapsedTimeInSeconds = Math.min(prevState.elapsedTimeInSeconds + 0.1, totalTimeInSeconds);
+                            const isFinished = prevState.isFinished || elapsedTimeInSeconds >= totalTimeInSeconds;
+                            if(isFinished){
+                                this.stopTimer();
+                            }
+                            const isRunning = prevState.isRunning && !isFinished;
+                            const isPaused = prevState.isPaused && !isFinished;
+                            return {elapsedTimeInSeconds, isFinished, isRunning, isPaused};                
+                        }
+                    )                    
+                },
+                100
+            );
+        }
     }
 
     stopTimer()
@@ -78,7 +99,7 @@ class CurrentTimebox extends React.Component
     }    
 
     render() {
-        const {isRunning, isPaused, pausesCount, elapsedTimeInSeconds} = this.state;
+        const {isRunning, isFinished, isPaused, pausesCount, elapsedTimeInSeconds} = this.state;
         const {title, totalTimeInMinutes} = this.props;
         const totalTimeInSeconds = totalTimeInMinutes * 60;
         const timeLeftInSeconds = totalTimeInSeconds - elapsedTimeInSeconds;
@@ -90,7 +111,7 @@ class CurrentTimebox extends React.Component
                 <Clock hours={0} minutes={minutesPartOfElapsedTime} seconds={secondsPartOfElapsedTime} miliseconds={0} className={isPaused ? "inactive" : ""}>Left</Clock>
                 <ProgressBar percent={progressInPercent} trackRemaining={true} className={isPaused ? "inactive" : ""} big color = "orangered"/>
                 <br/> 
-                <button onClick={this.handleStart} disabled = {isRunning}>Start</button>
+                <button onClick={this.handleStart} disabled = {isRunning || isFinished}>Start</button>
                 <button onClick={this.handleStop} disabled = {!isRunning}>Stop</button>
                 <button onClick={this.togglePause} disabled = {!isRunning}>{isPaused?"Resume":"Pause"}</button>
                 Number of pauses: {pausesCount}
@@ -99,10 +120,10 @@ class CurrentTimebox extends React.Component
     }
 }
 
-function CurrentTimeboxOrNothing({startedTimebox}) {
+function CurrentTimeboxOrNothing({startedTimebox, onFinish}) {
     if(startedTimebox) {
         const {title, totalTimeInMinutes} = startedTimebox;
-        return <CurrentTimebox title = {title} totalTimeInMinutes = {totalTimeInMinutes}/>
+        return <CurrentTimebox title = {title} totalTimeInMinutes = {totalTimeInMinutes} onFinish = {onFinish}/>
     } else {
         return null;
     }
@@ -115,4 +136,10 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(CurrentTimeboxOrNothing);
+function mapDispatchToProps(dispatch) {
+    return {
+        onFinish: () => dispatch(finishCurrentTimebox())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CurrentTimeboxOrNothing);

@@ -56,6 +56,7 @@ class TimeboxEditor extends React.Component
                         type="number"
                         onChange = {this.handleTotalTimeInMinutesChange}
                         value = {this.state.totalTimeInMinutes}
+                        step = "0.01"
                     />
                 </label><br/>
                 <a onClick={this.handleCancel}>Cancel</a>

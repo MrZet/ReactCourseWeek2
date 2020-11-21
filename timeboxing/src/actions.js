@@ -1,4 +1,5 @@
 import TimeboxesAPI from './api/FetchTimeboxesApi'
+import { getStartedTimebox, isAnyTimeboxStartedNow } from './reducers';
 
 export const setTimebox = timeboxes => ({ type: "TIMEBOXES_SET", timeboxes });
 export const setError = error => ({ type: "ERROR_SET", error });
@@ -9,6 +10,12 @@ export const replaceTimebox = timebox => ({ type: "TIMEBOX_REPLACE", replacedTim
 export const startTimeboxEdit = timebox => ({ type: "TIMEBOX_EDIT_START", currentlyEditedTimeboxId: timebox.id });
 export const stopTimeboxEdit = () => ({ type: "TIMEBOX_EDIT_STOP" });
 export const startTimeboxNow = timebox => ({ type: "TIMEBOX_START", timebox });
+export const finishCurrentTimebox = () => (dispatch, getState) => {
+    if(isAnyTimeboxStartedNow(getState()))
+    {
+        dispatch(removeTimebox(getStartedTimebox(getState())));
+    }
+}
 
 
 export const fetchAllTimeboxes = (accessToken) => (dispatch) => {
