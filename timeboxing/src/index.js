@@ -5,10 +5,10 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import {Provider} from 'react-redux'
 import './styles/main.scss';
 import App from './components/App';
-import {timeboxReducer} from './reducers';
+import {rootReducer} from './reducers';
 import thunk from 'redux-thunk'
 
-const store = createStore(timeboxReducer, composeWithDevTools(applyMiddleware(thunk)));
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 ReactDOM.render(
     <Provider store = {store}>
