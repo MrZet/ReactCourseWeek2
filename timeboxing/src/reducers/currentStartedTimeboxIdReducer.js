@@ -9,7 +9,7 @@ export function currentStartedTimeboxIdReducer(state = null, action) {
         }
         case "TIMEBOX_REMOVE": {
             const { removedTimebox } = action;
-            return removedTimebox.id === state.id ? null : state;
+            return removedTimebox.id === state ? null : state;
         }
         default: {
             return state;

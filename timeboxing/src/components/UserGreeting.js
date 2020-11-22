@@ -8,7 +8,8 @@ function UserGreeting(){
             {
                 ({accessToken}) =>
                     <>
-                        Hi {getUserEmail(accessToken)}  
+                        {/* Hi {getUserEmail(accessToken)}   */}
+                        Hi
                     </>    
             }     
         </AuthenticationContext.Consumer>

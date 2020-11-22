@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import LoginForm from './LoginForm';
-import AuthenticationApi from '../api/FetchAuthenticationApi';
+import AuthenticationApi from '../api/FakeAuthenticationApi';
 import AuthenticationContext from '../contexts/AuthenticationContext';
 
 const AuthenticatedApp = React.lazy(() => import ('./AuthenticatedApp'));
